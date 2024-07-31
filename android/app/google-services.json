@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "947167872796",
+    "project_id": "disputeresolver-62c3b",
+    "storage_bucket": "disputeresolver-62c3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947167872796:android:f0eeff5e05ae80ce699cd9",
+        "android_client_info": {
+          "package_name": "com.billthecoder.disputeresolverai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQseLcBs8Y-ukV4FQsDgQsvDklPN5MCCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
