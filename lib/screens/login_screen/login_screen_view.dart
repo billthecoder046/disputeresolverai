@@ -13,9 +13,9 @@ class Login_screenPage extends StatelessWidget {
     return Container(
       color: Colors.yellow,
       child: Center(
-        child: screenType.largerThan(MOBILE)
+        child: screenType.largerThan(TABLET)
             ? showWebLoginScreen()
-            : screenType.smallerThan(TABLET)
+            : screenType.largerThan(MOBILE)
             ? showTabLoginScreen()
             : showMobileLoginScreen(),
       ),
