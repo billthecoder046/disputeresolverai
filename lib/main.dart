@@ -18,6 +18,7 @@ class MyRootWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //I'have merged bilalwork into master branch
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
        builder: (context, child) => ResponsiveBreakpoints.builder(
