@@ -42,6 +42,7 @@ dependencies:
   get: ^4.6.6
   http: ^1.2.2
   responsive_framework: ^1.4.0
+  gap: ^3.0.1
 
 dev_dependencies:
   flutter_test:
