@@ -21,7 +21,14 @@ class _MyTextFieldState extends State<MyTextField> {
         padding: EdgeInsets.only(left: 12),
         width: size.width * .75,
         decoration:
-            BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12.0)),
+            BoxDecoration(color: Colors.white,
+                borderRadius: BorderRadius.circular(12.0)
+      //           borderRadius: BorderRadius.only(
+      //           bottomLeft: Radius.circular(26.0),
+      //   topRight: Radius.circular(26.0),
+      // )
+
+            ),
         child:  TextField(
           controller: widget.myController,
           decoration: InputDecoration(

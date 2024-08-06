@@ -1,3 +1,4 @@
+import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +9,21 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("My Home Screen"),
+        actions: [
+          IconButton(onPressed: () async{
+            var myCo = Get.find<Login_screenLogic>();
+            await myCo.logOut();
+            myCo.isSignedIn .value = true;
+            print("Signed Out successfully");
+          }, icon: const Icon(Icons.logout))
+        ],
+      ),
+      body: Center(
+        child: Text("My home Screen"),
+      ),
+    );
   }
 }
