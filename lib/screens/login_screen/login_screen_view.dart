@@ -1,3 +1,4 @@
+
 import 'package:disputeresolverai/screens/commonWidgets/buttons.dart';
 import 'package:disputeresolverai/screens/commonWidgets/fieldWidgets.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
@@ -21,8 +22,8 @@ class Login_screenPage extends StatelessWidget {
           child: screenType.largerThan(TABLET)
               ? showWebLoginScreen(context)
               : screenType.largerThan(MOBILE)
-                  ? showTabLoginScreen(context)
-                  : showMobileLoginScreen(context),
+              ? showTabLoginScreen(context)
+              : showMobileLoginScreen(context),
         ),
       ),
     );
@@ -57,9 +58,10 @@ class Login_screenPage extends StatelessWidget {
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
         myFirstButton(
-          myFunction: () {
+          myFunction: () async{
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
+            await logic.signInUserOnApp();
           },
           myButtonWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -81,42 +83,43 @@ class Login_screenPage extends StatelessWidget {
 
   mySignUpForm(context) {
     return Column(
-      children: [
+        children: [
 
         Gap(16),
-        Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
-        Gap(16),
-        MyTextField(myController: logic.userName, hintText: "Enter Username"),
-        Gap(16),
-        MyTextField(myController: logic.emailC, hintText: "Enter Email"),
-        Gap(16),
-        MyTextField(myController: logic.passC, hintText: "Enter Password"),
-        Gap(16),
-        myFirstButton(
-          myFunction: () async{
-            print("My Email Data: ${logic.emailC.text}");
-            print("My Password Data: ${logic.passC.text}");
-            print("My Username: ${logic.userName.text}");
+    Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
+    Gap(16),
+    MyTextField(myController: logic.userName, hintText: "Enter Username"),
+    Gap(16),
+    MyTextField(myController: logic.emailC, hintText: "Enter Email"),
+    Gap(16),
+    MyTextField(myController: logic.passC, hintText: "Enter Password"),
+    Gap(16),
+    myFirstButton(
+    myFunction: () async{
+    print("My Email Data: ${logic.emailC.text}");
+    print("My Password Data: ${logic.passC.text}");
+    print("My Username: ${logic.userName.text}");
 
-            ///onpressed
-            await logic.createUserOnFirebase();
-            print("Thankyou zain");
-          },
-          myButtonWidget: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Icon(Icons.ads_click), Gap(6), Text("Signup")],
-          ),
-        ),
-        Gap(16),
-        TextButton(
-            onPressed: () {
-              logic.isSignedIn.value = !logic.isSignedIn.value;
-            },
-            child: Text(
-              "Already Signed UP? SignIn!",
-              style: MyTextStyles.myTextStyleBlueMedium,
-            ))
-      ],
+    ///onpressed
+    await logic.createUserOnFirebase();
+    print("Thankyou zain");
+    },
+    myButtonWidget: const Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [Icon(Icons.ads_click), Gap(6), Text("Signup")],
+    ),
+    ),
+    Gap(16),
+    TextButton(
+    onPressed: () {
+    logic.isSignedIn.value = !logic.isSignedIn.value;
+    },
+    child: Text(
+    "Already Signed UP? SignIn!",
+    style: MyTextStyles.myTextStyleBlueMedium,
+    )),
+
+    ],
     );
-  }
+    }
 }
