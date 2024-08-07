@@ -11,14 +11,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyRootWidget());
+  runApp(const MyRootWidget());
 }
 class MyRootWidget extends StatelessWidget {
   const MyRootWidget({super.key});
-
+///G malik sab
   @override
   Widget build(BuildContext context) {
-    //I'have merged bilalwork into master branch
+    //I'have merged Malik into master branch
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
 
