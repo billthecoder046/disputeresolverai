@@ -57,9 +57,10 @@ class Login_screenPage extends StatelessWidget {
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
         myFirstButton(
-          myFunction: () {
+          myFunction: () async{
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
+            await logic.signInUserOnApp();
           },
           myButtonWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,

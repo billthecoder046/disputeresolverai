@@ -30,14 +30,35 @@ class Login_screenLogic extends GetxController {
       );
     }else{
       try {
-        var user = await _firebaseAuth.createUserWithEmailAndPassword(email: emailC.text, password: passC.text);
-        if(user != null){
-                Get.to(()=> HomePage(), transition: Transition.leftToRight);
-              }
-        else{
-          print("User is null, so can't navigate");
-        }
-      } catch (e) {
+              Get.to(()=> HomePage(), transition: Transition.leftToRight);
+                  } catch (e) {
+        print(e);
+        Get.snackbar(
+          'Some issue occurred',
+          e.toString(),
+          colorText: Colors.white,
+          backgroundColor: Colors.lightBlue,
+          icon: const Icon(Icons.add_alert),
+        );
+      } finally {
+        print("Thankyou for your time");
+      }
+    }
+
+  }
+  Future<void> signInUserOnApp() async{
+    if(emailC.text.isEmpty || passC.text.isEmpty){
+      Get.snackbar(
+         'Email or password is empty',
+        "Both are required",
+        colorText: Colors.white,
+        backgroundColor: Colors.lightBlue,
+        icon: const Icon(Icons.add_alert),
+      );
+    }else{
+      try {
+              Get.to(()=> HomePage(), transition: Transition.leftToRight);
+                  } catch (e) {
         print(e);
         Get.snackbar(
           'Some issue occurred',
