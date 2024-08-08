@@ -116,7 +116,8 @@ class Login_screenPage extends StatelessWidget {
             child: Text(
               "Already Signed UP? SignIn!",
               style: MyTextStyles.myTextStyleBlueMedium,
-            ))
+            )),
+
       ],
     );
   }
