@@ -42,7 +42,9 @@ class Login_screenPage extends StatelessWidget {
 
   myForm(context) {
     return Obx(() {
-      return logic.isSignedIn.value ? mySignInForm(context) : mySignUpForm(context);
+      return logic.isSignedIn.value
+          ? mySignInForm(context)
+          : mySignUpForm(context);
     });
   }
 
@@ -50,14 +52,17 @@ class Login_screenPage extends StatelessWidget {
     return Column(
       children: [
         Gap(16),
-        Text("Sign In Form",style: MyTextStyles.myTextStyleBlueLarge,),
+        Text(
+          "Sign In Form",
+          style: MyTextStyles.myTextStyleBlueLarge,
+        ),
         Gap(16),
         MyTextField(myController: logic.emailC, hintText: "Enter Email"),
         Gap(16),
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
         myFirstButton(
-          myFunction: () async{
+          myFunction: () async {
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
             await logic.signInUserOnApp();
@@ -83,9 +88,11 @@ class Login_screenPage extends StatelessWidget {
   mySignUpForm(context) {
     return Column(
       children: [
-
         Gap(16),
-        Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
+        Text(
+          "Sign Up Form",
+          style: MyTextStyles.myTextStyleBlueLarge,
+        ),
         Gap(16),
         MyTextField(myController: logic.userName, hintText: "Enter Username"),
         Gap(16),
@@ -94,7 +101,7 @@ class Login_screenPage extends StatelessWidget {
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
         myFirstButton(
-          myFunction: () async{
+          myFunction: () async {
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
             print("My Username: ${logic.userName.text}");
@@ -116,7 +123,7 @@ class Login_screenPage extends StatelessWidget {
             child: Text(
               "Already Signed UP? SignIn!",
               style: MyTextStyles.myTextStyleBlueMedium,
-            ))
+            )),
       ],
     );
   }

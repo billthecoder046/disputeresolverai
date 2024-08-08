@@ -9,20 +9,20 @@ import 'login_screen_view.dart';
 class Login_screenLogic extends GetxController {
   //MyVariables
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  
+
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
   TextEditingController userName = TextEditingController();
 
   //ifSignedInVariable
   RxBool isSignedIn = true.obs;
-  
-  
+
+
   //MyFunctions
   Future<void> createUserOnFirebase() async{
     if(emailC.text.isEmpty || passC.text.isEmpty){
       Get.snackbar(
-         'Email or password is empty',
+        'Email or password is empty',
         "Both are required",
         colorText: Colors.white,
         backgroundColor: Colors.lightBlue,
@@ -30,8 +30,8 @@ class Login_screenLogic extends GetxController {
       );
     }else{
       try {
-              Get.to(()=> HomePage(), transition: Transition.leftToRight);
-                  } catch (e) {
+        Get.to(()=> HomePage(), transition: Transition.leftToRight);
+      } catch (e) {
         print(e);
         Get.snackbar(
           'Some issue occurred',
@@ -49,7 +49,7 @@ class Login_screenLogic extends GetxController {
   Future<void> signInUserOnApp() async{
     if(emailC.text.isEmpty || passC.text.isEmpty){
       Get.snackbar(
-         'Email or password is empty',
+        'Email or password is empty',
         "Both are required",
         colorText: Colors.white,
         backgroundColor: Colors.lightBlue,
@@ -57,8 +57,8 @@ class Login_screenLogic extends GetxController {
       );
     }else{
       try {
-              Get.to(()=> HomePage(), transition: Transition.leftToRight);
-                  } catch (e) {
+        Get.to(()=> HomePage(), transition: Transition.leftToRight);
+      } catch (e) {
         print(e);
         Get.snackbar(
           'Some issue occurred',
@@ -76,10 +76,10 @@ class Login_screenLogic extends GetxController {
 
   //MyFunctions
   Future<void> logOut() async{
-   await _firebaseAuth.signOut();
-   Get.offAll(Login_screenPage());
+    await _firebaseAuth.signOut();
+    Get.offAll(Login_screenPage());
 
-  }
-  
+ }
+
 
 }
