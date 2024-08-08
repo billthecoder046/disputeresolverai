@@ -57,7 +57,7 @@ class Login_screenPage extends StatelessWidget {
           myFunction: () async{
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
-            await logic.login();
+            await logic.logn();
           },
           myButtonWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
