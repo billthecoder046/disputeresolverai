@@ -1,7 +1,8 @@
-import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../login_screen/login_screen_view.dart';
 import 'home_logic.dart';
 
 class HomePage extends StatelessWidget {
