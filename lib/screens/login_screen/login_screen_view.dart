@@ -49,7 +49,7 @@ class Login_screenPage extends StatelessWidget {
   mySignInForm(context) {
     return Column(
       children: [
-        Gap(16),
+        const Gap(16),
         Text("Sign In Form",style: MyTextStyles.myTextStyleBlueLarge,),
         Gap(16),
         MyTextField(myController: logic.emailC, hintText: "Enter Email"),
@@ -57,9 +57,11 @@ class Login_screenPage extends StatelessWidget {
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
         myFirstButton(
-          myFunction: () {
+          myFunction: () async{
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
+            await logic.signInUserOnApp();
+
           },
           myButtonWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +99,6 @@ class Login_screenPage extends StatelessWidget {
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
             print("My Username: ${logic.userName.text}");
-
             ///onpressed
             await logic.createUserOnFirebase();
             print("Thankyou zain");
@@ -107,7 +108,7 @@ class Login_screenPage extends StatelessWidget {
             children: [Icon(Icons.ads_click), Gap(6), Text("Signup")],
           ),
         ),
-        Gap(16),
+        const Gap(16),
         TextButton(
             onPressed: () {
               logic.isSignedIn.value = !logic.isSignedIn.value;

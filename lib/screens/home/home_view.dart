@@ -4,14 +4,15 @@ import 'package:get/get.dart';
 
 import 'home_logic.dart';
 
-class HomePage extends StatelessWidget {
+class Home_Screen_Page extends StatelessWidget {
   final logic = Get.put(HomeLogic());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("My Home Screen"),
+        title: const Text("My Home Screen"),
         actions: [
           IconButton(onPressed: () async{
             var myCo = Get.find<Login_screenLogic>();
@@ -21,8 +22,117 @@ class HomePage extends StatelessWidget {
           }, icon: const Icon(Icons.logout))
         ],
       ),
-      body: Center(
-        child: Text("My home Screen"),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Card(
+                elevation: 100,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                shadowColor: Colors.black,
+                child: Container(
+                  width: 300,
+                  height: 200,
+                  padding: const EdgeInsets.all(16),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'This is an elevated card',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'The card has an elevation of 100, a shadow color, and rounded corners.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 100,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                shadowColor: Colors.black,
+                child: Container(
+                  width: 300,
+                  height: 200,
+                  padding: const EdgeInsets.all(16),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'This is an elevated card',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'The card has an elevation of 100, a shadow color, and rounded corners.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 100,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                shadowColor: Colors.black,
+                child: Container(
+                  width: 300,
+                  height: 200,
+                  padding: const EdgeInsets.all(16),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'This is an elevated card',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'The card has an elevation of 100, a shadow color, and rounded corners.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 100,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                shadowColor: Colors.black,
+                child: Container(
+                  width: 300,
+                  height: 200,
+                  padding: const EdgeInsets.all(16),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'This is an elevated card',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'The card has an elevation of 100, a shadow color, and rounded corners.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

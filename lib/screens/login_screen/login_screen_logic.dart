@@ -16,8 +16,44 @@ class Login_screenLogic extends GetxController {
 
   //ifSignedInVariable
   RxBool isSignedIn = true.obs;
-  
-  
+
+
+
+
+
+  Future<void> signInUserOnApp() async {
+    if (emailC.text.isEmpty || passC.text.isEmpty) {
+      Get.snackbar(
+        'Email or password is empty',
+        'Both are required',
+        colorText: Colors.white,
+        backgroundColor: Colors.lightBlue,
+        icon: const Icon(Icons.add_alert),
+      );
+    } else {
+      try {
+        var user = await _firebaseAuth.signInWithEmailAndPassword(
+          email: emailC.text,
+          password: passC.text,
+        );
+        Get.to(() => Home_Screen_Page(), transition: Transition.upToDown,duration: Duration(seconds: 10));
+      } catch (e) {
+        print(e);
+        Get.snackbar(
+          'Some issue occurred',
+          e.toString(),
+          colorText: Colors.white,
+          backgroundColor: Colors.lightBlue,
+          icon: const Icon(Icons.add_alert),
+        );
+      } finally {
+        print("Thank you for your time");
+      }
+    }
+  }
+
+
+
   //MyFunctions
   Future<void> createUserOnFirebase() async{
     if(emailC.text.isEmpty || passC.text.isEmpty){
@@ -32,7 +68,7 @@ class Login_screenLogic extends GetxController {
       try {
         var user = await _firebaseAuth.createUserWithEmailAndPassword(email: emailC.text, password: passC.text);
         if(user != null){
-                Get.to(()=> HomePage(), transition: Transition.leftToRight);
+                Get.to(()=> Home_Screen_Page(), transition: Transition.leftToRight);
               }
         else{
           print("User is null, so can't navigate");
@@ -53,12 +89,14 @@ class Login_screenLogic extends GetxController {
 
   }
 
+
   //MyFunctions
   Future<void> logOut() async{
    await _firebaseAuth.signOut();
-   Get.offAll(Login_screenPage());
+   Get.offAll(Login_screenPage() ,transition: Transition.leftToRight);
 
   }
   
 
 }
+

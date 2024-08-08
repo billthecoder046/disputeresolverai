@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import 'firebase_options.dart';
 
 void main() async {
@@ -15,12 +14,11 @@ void main() async {
 }
 class MyRootWidget extends StatelessWidget {
   const MyRootWidget({super.key});
-///G malik sab
   @override
   Widget build(BuildContext context) {
-    //I'have merged Malik into master branch
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
+       debugShowCheckedModeBanner: false,
 
        builder: (context, child) => ResponsiveBreakpoints.builder(
       child: child!,
