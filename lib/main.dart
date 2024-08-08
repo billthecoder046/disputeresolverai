@@ -21,7 +21,7 @@ class MyRootWidget extends StatelessWidget {
     //I'have merged bilalwork into master branch
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
-
+       debugShowCheckedModeBanner: false,
        builder: (context, child) => ResponsiveBreakpoints.builder(
       child: child!,
       breakpoints: [
