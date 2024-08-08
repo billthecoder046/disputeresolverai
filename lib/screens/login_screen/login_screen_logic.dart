@@ -52,6 +52,7 @@ class Login_screenLogic extends GetxController {
     }
 
   }
+
   Future<void> login() async{
     if(emailC.text.isEmpty || passC.text.isEmpty){
       Get.snackbar(

@@ -83,7 +83,6 @@ class Login_screenPage extends StatelessWidget {
   mySignUpForm(context) {
     return Column(
       children: [
-
         Gap(16),
         Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
         Gap(16),
