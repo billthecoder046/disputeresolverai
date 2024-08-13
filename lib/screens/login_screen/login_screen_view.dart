@@ -10,6 +10,7 @@ import 'login_screen_logic.dart';
 
 class Login_screenPage extends StatelessWidget {
   final logic = Get.put(Login_screenLogic());
+  final isLoading = false.obs;  // Loading state
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +22,8 @@ class Login_screenPage extends StatelessWidget {
           child: screenType.largerThan(TABLET)
               ? showWebLoginScreen(context)
               : screenType.largerThan(MOBILE)
-                  ? showTabLoginScreen(context)
-                  : showMobileLoginScreen(context),
+              ? showTabLoginScreen(context)
+              : showMobileLoginScreen(context),
         ),
       ),
     );
@@ -87,50 +88,53 @@ class Login_screenPage extends StatelessWidget {
   }
 
   mySignUpForm(context) {
-    return Column(
-      children: [
-        Container(
-          height: 200,
-          width: 200,
-          child: Image.asset('assets/images/pngegg (1).png'),
-        ),
-        //ap name
-        Text('º•DeisputeResolverAI•º',style: TextStyle(fontSize: 20,fontWeight:FontWeight.bold),),
-        Gap(16),
-        Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
-        Gap(16),
-        MyTextField(myController: logic.userName, hintText: "Enter Username"),
-        Gap(16),
-        MyTextField(myController: logic.emailC, hintText: "Enter Email"),
-        Gap(16),
-        MyTextField(myController: logic.passC, hintText: "Enter Password"),
-        Gap(16),
-        myFirstButton(
-          myFunction: () async{
-            print("My Email Data: ${logic.emailC.text}");
-            print("My Password Data: ${logic.passC.text}");
-            print("My Username: ${logic.userName.text}");
-
-            ///onpressed
-            await logic.createUserOnFirebase();
-            print("Thankyou zain");
-          },
-          myButtonWidget: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Icon(Icons.ads_click), Gap(6), Text("Signup")],
+    return Obx(() {
+      return Column(
+        children: [
+          Container(
+            height: 200,
+            width: 200,
+            child: Image.asset('assets/images/pngegg (1).png'),
           ),
-        ),
-        Gap(16),
-        TextButton(
-            onPressed: () {
-              logic.isSignedIn.value = !logic.isSignedIn.value;
-            },
-            child: Text(
-              "Already Signed UP? SignIn!",
-              style: MyTextStyles.myTextStyleBlueMedium,
-            )),
+          Text('º•DeisputeResolverAI•º',style: TextStyle(fontSize: 20,fontWeight:FontWeight.bold),),
+          Gap(16),
+          Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
+          Gap(16),
+          MyTextField(myController: logic.userName, hintText: "Enter Username"),
+          Gap(16),
+          MyTextField(myController: logic.emailC, hintText: "Enter Email"),
+          Gap(16),
+          MyTextField(myController: logic.passC, hintText: "Enter Password"),
+          Gap(16),
+          isLoading.value
+              ? CircularProgressIndicator()
+              : myFirstButton(
+            myFunction: () async {
+              isLoading.value = true;  // Start loading
+              print("My Email Data: ${logic.emailC.text}");
+              print("My Password Data: ${logic.passC.text}");
+              print("My Username: ${logic.userName.text}");
 
-      ],
-    );
+              await logic.createUserOnFirebase();
+              isLoading.value = false;
+              print("Thankyou zain");
+            },
+            myButtonWidget: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Icon(Icons.ads_click), Gap(6), Text("Signup")],
+            ),
+          ),
+          Gap(16),
+          TextButton(
+              onPressed: () {
+                logic.isSignedIn.value = !logic.isSignedIn.value;
+              },
+              child: Text(
+                "Already Signed UP? SignIn!",
+                style: MyTextStyles.myTextStyleBlueMedium,
+              )),
+        ],
+      );
+    });
   }
 }
