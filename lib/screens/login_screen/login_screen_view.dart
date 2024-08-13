@@ -10,7 +10,7 @@ import 'login_screen_logic.dart';
 
 class Login_screenPage extends StatelessWidget {
   final logic = Get.put(Login_screenLogic());
-  final isLoading = false.obs;  // Loading state
+  final isLoading = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +110,10 @@ class Login_screenPage extends StatelessWidget {
               ? CircularProgressIndicator()
               : myFirstButton(
             myFunction: () async {
-              isLoading.value = true;  // Start loading
+              isLoading.value = true;
               print("My Email Data: ${logic.emailC.text}");
               print("My Password Data: ${logic.passC.text}");
               print("My Username: ${logic.userName.text}");
-
               await logic.createUserOnFirebase();
               isLoading.value = false;
               print("Thankyou zain");
