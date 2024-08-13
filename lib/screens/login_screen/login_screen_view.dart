@@ -49,6 +49,12 @@ class Login_screenPage extends StatelessWidget {
   mySignInForm(context) {
     return Column(
       children: [
+        Container(
+          height: 200,
+          width: 200,
+          child: Image.asset('assets/images/pngegg (1).png'),
+        ),
+        Text('º•DeisputeResolverAI•º',style: TextStyle(fontSize: 20,fontWeight:FontWeight.bold),),
         Gap(16),
         Text("Sign In Form",style: MyTextStyles.myTextStyleBlueLarge,),
         Gap(16),
@@ -83,7 +89,12 @@ class Login_screenPage extends StatelessWidget {
   mySignUpForm(context) {
     return Column(
       children: [
-
+        Container(
+          height: 200,
+          width: 200,
+          child: Image.asset('assets/images/pngegg (1).png'),
+        ),
+        Text('º•DeisputeResolverAI•º',style: TextStyle(fontSize: 20,fontWeight:FontWeight.bold),),
         Gap(16),
         Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
         Gap(16),
