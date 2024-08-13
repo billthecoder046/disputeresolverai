@@ -94,6 +94,7 @@ class Login_screenPage extends StatelessWidget {
           width: 200,
           child: Image.asset('assets/images/pngegg (1).png'),
         ),
+        //ap name
         Text('º•DeisputeResolverAI•º',style: TextStyle(fontSize: 20,fontWeight:FontWeight.bold),),
         Gap(16),
         Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
