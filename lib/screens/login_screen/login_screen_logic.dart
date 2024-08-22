@@ -1,4 +1,5 @@
 import 'package:disputeresolverai/screens/home/home_view.dart';
+import 'package:disputeresolverai/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,20 @@ class Login_screenLogic extends GetxController {
       }
     }
 
+  }
+
+  Future<void> loginUser() async{
+      try {
+        UserCredential myUser = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailC.text, password: passC.text);
+        if(myUser != null){
+          Get.to(()=> HomePage(), transition: Transition.leftToRight);
+              }else{
+                Get.snackbar(MyStrings.someErrorOccurred.tr,MyStrings.userCantLogin.tr);
+              }
+      } catch (e) {
+        print(e);
+        Get.snackbar(MyStrings.someErrorOccurred.tr,e.toString());
+      }
   }
 
   //MyFunctions
