@@ -18,7 +18,7 @@ class _MyTextFieldState extends State<MyTextField> {
       elevation: 8.0,
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.only(left: 12),
+        padding: const EdgeInsets.only(left: 12),
         width: size.width * .75,
         decoration:
             BoxDecoration(color: Colors.white,
