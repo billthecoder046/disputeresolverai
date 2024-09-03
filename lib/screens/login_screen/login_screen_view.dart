@@ -1,14 +1,24 @@
+import 'dart:io';
+
 import 'package:disputeresolverai/screens/commonWidgets/buttons.dart';
 import 'package:disputeresolverai/screens/commonWidgets/fieldWidgets.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'login_screen_logic.dart';
 
-class Login_screenPage extends StatelessWidget {
+class Login_screenPage extends StatefulWidget {
+  @override
+  State<Login_screenPage> createState() => _Login_screenPageState();
+}
+
+class _Login_screenPageState extends State<Login_screenPage> {
   final logic = Get.put(Login_screenLogic());
 
   @override
@@ -79,13 +89,39 @@ class Login_screenPage extends StatelessWidget {
       ],
     );
   }
-
+  Uint8List? bytesFromPicker;
   mySignUpForm(context) {
     return Column(
       children: [
 
         Gap(16),
         Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
+        Gap(16),
+
+        InkWell(
+          onTap: () async {
+            if (kIsWeb) {
+              print("perform image_picker_web package");
+              bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
+              setState(() {});
+            } else if (Platform.isAndroid || Platform.isIOS) {
+              print("Perform image_picker package");
+            }
+          },
+          child: Container(
+            height: 150,
+            width: 150,
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: bytesFromPicker == null
+                ? SizedBox()
+                : ClipOval(
+              child: Image.memory(bytesFromPicker!),
+            ),
+          ),
+        ),
         Gap(16),
         MyTextField(myController: logic.userName, hintText: "Enter Username"),
         Gap(16),
@@ -95,12 +131,17 @@ class Login_screenPage extends StatelessWidget {
         Gap(16),
         myFirstButton(
           myFunction: () async{
-            print("My Email Data: ${logic.emailC.text}");
-            print("My Password Data: ${logic.passC.text}");
-            print("My Username: ${logic.userName.text}");
+            var myFolderName = logic.userName.text;
+
+              String?  myProfileImageUrl = await uploadMyPicture(bytesFromPicker!, "myProfileImages/$myFolderName");
 
             ///onpressed
-            await logic.createUserOnFirebase();
+            if(myProfileImageUrl !=null){
+              await logic.createUserOnFirebase(myProfileImageUrl);
+            }else{
+              print("Image couldn't be uploaded for some reason");
+            }
+
             print("Thankyou zain");
           },
           myButtonWidget: const Row(
@@ -119,5 +160,35 @@ class Login_screenPage extends StatelessWidget {
             ))
       ],
     );
+  }
+
+
+
+  //This function will upload your image to firebase storage
+  Future<String?> uploadMyPicture(
+      Uint8List image,
+      String folderPath, // Path to the folder in Firebase Storage
+      ) async {
+    String? myDownloadUrl;
+
+    const String fileName = 'profile.jpg'; // You can customize the filename
+
+    //Get path where you want to upload your profile pic
+    final Reference ref =
+    FirebaseStorage.instance.ref().child(folderPath).child(fileName);
+
+    try {
+      //Will upload your bytesImage data on firebase storage
+      await ref.putData(image);
+
+      //Will return the file download url link
+      String downloadUrl = await ref.getDownloadURL();
+      myDownloadUrl = downloadUrl;
+      print('MyProfile Image uploaded successfully: $downloadUrl');
+    } catch (e) {
+      print('Error uploading thumbnail: $e');
+    }
+
+    return myDownloadUrl;
   }
 }
