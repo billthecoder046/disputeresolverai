@@ -112,11 +112,13 @@ class _Login_screenPageState extends State<Login_screenPage> {
             height: 150,
             width: 150,
             decoration: BoxDecoration(
-              color: Colors.red,
               borderRadius: BorderRadius.circular(100),
             ),
             child: bytesFromPicker == null
-                ? SizedBox()
+                ? SizedBox(child: Container(
+                decoration:BoxDecoration(borderRadius: BorderRadius.circular(100),color:
+                Colors.cyanAccent[200]),child:
+            Icon(Icons.add_a_photo_outlined)),)
                 : ClipOval(
               child: Image.memory(bytesFromPicker!, fit: BoxFit.cover),
             ),

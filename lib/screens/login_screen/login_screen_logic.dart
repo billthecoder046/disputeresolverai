@@ -52,7 +52,7 @@ class Login_screenLogic extends GetxController {
 
           // Save user data to Firestore (you need to add the actual data)
           await FirebaseFirestore.instance.collection("Users").doc(myUserId).set(
-            myUserData.toJson()
+            myUserData.toJson(),
           );
 
           // Navigate to HomePage with transition (assuming HomePage exists)
