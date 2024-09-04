@@ -1,9 +1,10 @@
-class User {
+class MyUser {
   String id;
   String name;
+  DateTime? createdAt;
   String? imageUrl;
 
-  User({required this.id, required this.name, this.imageUrl});
+  MyUser({required this.id, required this.name, this.imageUrl,this.createdAt, });
 
   // Convert a User object into a map
   Map<String, dynamic> toJson() {
@@ -11,15 +12,19 @@ class User {
       'id': id,
       'name': name,
       'imageUrl': imageUrl,
+      'createdAt':createdAt,
+
     };
   }
 
   // Create a User object from a map
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory MyUser.fromJson(Map<String, dynamic> json) {
+    return MyUser(
       id: json['id'] as String,
       name: json['name'] as String,
       imageUrl: json['imageUrl'] as String?,
+      createdAt: json['createdAt'] as DateTime,
+
     );
   }
 }

@@ -22,6 +22,7 @@ class MyRootWidget extends StatelessWidget {
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
        debugShowCheckedModeBanner: false,
+
        builder: (context, child) => ResponsiveBreakpoints.builder(
       child: child!,
       breakpoints: [
