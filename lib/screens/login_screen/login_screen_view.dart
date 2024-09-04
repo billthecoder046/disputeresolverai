@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:disputeresolverai/screens/commonWidgets/buttons.dart';
 import 'package:disputeresolverai/screens/commonWidgets/fieldWidgets.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
@@ -10,7 +9,6 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import 'login_screen_logic.dart';
 
 class Login_screenPage extends StatefulWidget {
@@ -20,6 +18,7 @@ class Login_screenPage extends StatefulWidget {
 
 class _Login_screenPageState extends State<Login_screenPage> {
   final logic = Get.put(Login_screenLogic());
+  bool isLoading = false; // Manage loading state
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +30,8 @@ class _Login_screenPageState extends State<Login_screenPage> {
           child: screenType.largerThan(TABLET)
               ? showWebLoginScreen(context)
               : screenType.largerThan(MOBILE)
-                  ? showTabLoginScreen(context)
-                  : showMobileLoginScreen(context),
+              ? showTabLoginScreen(context)
+              : showMobileLoginScreen(context),
         ),
       ),
     );
@@ -60,14 +59,14 @@ class _Login_screenPageState extends State<Login_screenPage> {
     return Column(
       children: [
         Gap(16),
-        Text("Sign In Form",style: MyTextStyles.myTextStyleBlueLarge,),
+        Text("Sign In Form", style: MyTextStyles.myTextStyleBlueLarge),
         Gap(16),
         MyTextField(myController: logic.emailC, hintText: "Enter Email"),
         Gap(16),
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
         myFirstButton(
-          myFunction: () async{
+          myFunction: () async {
             print("My Email Data: ${logic.emailC.text}");
             print("My Password Data: ${logic.passC.text}");
             await logic.loginUser();
@@ -79,25 +78,26 @@ class _Login_screenPageState extends State<Login_screenPage> {
         ),
         Gap(16),
         TextButton(
-            onPressed: () {
-              logic.isSignedIn.value = !logic.isSignedIn.value;
-            },
-            child: Text(
-              "Not Signed In? SignUP!",
-              style: MyTextStyles.myTextStyleBlueMedium,
-            ))
+          onPressed: () {
+            logic.isSignedIn.value = !logic.isSignedIn.value;
+          },
+          child: Text(
+            "Not Signed In? SignUP!",
+            style: MyTextStyles.myTextStyleBlueMedium,
+          ),
+        )
       ],
     );
   }
+
   Uint8List? bytesFromPicker;
+
   mySignUpForm(context) {
     return Column(
       children: [
-
         Gap(16),
-        Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
+        Text("Sign Up Form", style: MyTextStyles.myTextStyleBlueLarge),
         Gap(16),
-
         InkWell(
           onTap: () async {
             if (kIsWeb) {
@@ -118,7 +118,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
             child: bytesFromPicker == null
                 ? SizedBox()
                 : ClipOval(
-              child: Image.memory(bytesFromPicker!),
+              child: Image.memory(bytesFromPicker!, fit: BoxFit.cover),
             ),
           ),
         ),
@@ -129,20 +129,29 @@ class _Login_screenPageState extends State<Login_screenPage> {
         Gap(16),
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
-        myFirstButton(
-          myFunction: () async{
+        isLoading // Show CircularProgressIndicator if loading
+            ? CircularProgressIndicator()
+            : myFirstButton(
+          myFunction: () async {
+            setState(() {
+              isLoading = true; // Start loading indicator
+            });
             var myFolderName = logic.userName.text;
+            String? myProfileImageUrl = await uploadMyPicture(
+                bytesFromPicker!, "myProfileImages/$myFolderName");
 
-              String?  myProfileImageUrl = await uploadMyPicture(bytesFromPicker!, "myProfileImages/$myFolderName");
-
-            ///onpressed
-            if(myProfileImageUrl !=null){
+            if (myProfileImageUrl != null) {
               await logic.createUserOnFirebase(myProfileImageUrl);
-            }else{
+              // Navigate to the next screen here if needed
+            } else {
               print("Image couldn't be uploaded for some reason");
             }
 
-            print("Thankyou zain");
+            setState(() {
+              isLoading = false; // Stop loading indicator
+            });
+
+            print("Thank you!");
           },
           myButtonWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -151,18 +160,17 @@ class _Login_screenPageState extends State<Login_screenPage> {
         ),
         Gap(16),
         TextButton(
-            onPressed: () {
-              logic.isSignedIn.value = !logic.isSignedIn.value;
-            },
-            child: Text(
-              "Already Signed UP? SignIn!",
-              style: MyTextStyles.myTextStyleBlueMedium,
-            ))
+          onPressed: () {
+            logic.isSignedIn.value = !logic.isSignedIn.value;
+          },
+          child: Text(
+            "Already Signed UP? SignIn!",
+            style: MyTextStyles.myTextStyleBlueMedium,
+          ),
+        )
       ],
     );
   }
-
-
 
   //This function will upload your image to firebase storage
   Future<String?> uploadMyPicture(
