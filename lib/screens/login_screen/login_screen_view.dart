@@ -25,7 +25,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
     final screenType = ResponsiveBreakpoints.of(context);
     return Scaffold(
       body: Container(
-        color: Colors.yellow,
+        color: Colors.greenAccent,
         child: Center(
           child: screenType.largerThan(TABLET)
               ? showWebLoginScreen(context)
@@ -119,6 +119,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
                 decoration:BoxDecoration(borderRadius: BorderRadius.circular(100),color:
                 Colors.cyanAccent[200]),child:
             Icon(Icons.add_a_photo_outlined)),)
+
                 : ClipOval(
               child: Image.memory(bytesFromPicker!, fit: BoxFit.cover),
             ),
@@ -131,10 +132,17 @@ class _Login_screenPageState extends State<Login_screenPage> {
         Gap(16),
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
+        MyTextField(myController: logic.CpassC, hintText: "Confirm Password"),
+        Gap(16),
         isLoading // Show CircularProgressIndicator if loading
             ? CircularProgressIndicator()
             : myFirstButton(
           myFunction: () async {
+
+            if(bytesFromPicker == null){
+              print("Please pick image first");
+              return;
+            }
             setState(() {
               isLoading = true; // Start loading indicator
             });

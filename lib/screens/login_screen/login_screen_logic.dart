@@ -17,6 +17,7 @@ class Login_screenLogic extends GetxController {
 
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
+  TextEditingController CpassC = TextEditingController();
   TextEditingController userName = TextEditingController();
 
 
