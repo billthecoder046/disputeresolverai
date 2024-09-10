@@ -32,14 +32,6 @@ class HomePage extends StatelessWidget {
             //   Get.snackbar(MyStrings.success, MyStrings.signedOutSuccessfully);
             // }
 
-
-
-
-
-            //
-
-
-
           }, icon: const Icon(Icons.logout))
         ],
       ),

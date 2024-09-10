@@ -19,7 +19,8 @@ class Login_screenPage extends StatefulWidget {
 
 class _Login_screenPageState extends State<Login_screenPage> {
   final logic = Get.put(Login_screenLogic());
-  bool isLoading = false; // Step 1: Add loading state
+  bool isLoading = false;
+  Uint8List? bytesFromPicker;
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +34,11 @@ class _Login_screenPageState extends State<Login_screenPage> {
               child: screenType.largerThan(TABLET)
                   ? showWebLoginScreen(context)
                   : screenType.largerThan(MOBILE)
-                      ? showTabLoginScreen(context)
-                      : showMobileLoginScreen(context),
+                  ? showTabLoginScreen(context)
+                  : showMobileLoginScreen(context),
             ),
           ),
-          if (isLoading) // Step 2: Show loading indicator when isLoading is true
+          if (isLoading)
             Center(
               child: CircularProgressIndicator(),
             ),
@@ -113,8 +114,6 @@ class _Login_screenPageState extends State<Login_screenPage> {
     );
   }
 
-  Uint8List? bytesFromPicker;
-
   mySignUpForm(context) {
     return Column(
       children: [
@@ -143,15 +142,15 @@ class _Login_screenPageState extends State<Login_screenPage> {
             ),
             child: bytesFromPicker == null
                 ? SizedBox(
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/addicon.png'),
-                    ))
+                child: CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/addicon.png'),
+                ))
                 : ClipOval(
-                    child: Image.memory(
-                      bytesFromPicker!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+              child: Image.memory(
+                bytesFromPicker!,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
         Gap(16),
@@ -169,12 +168,22 @@ class _Login_screenPageState extends State<Login_screenPage> {
 
             var myFolderName = logic.userName.text;
 
-            String? myProfileImageUrl = await uploadMyPicture(
+            String? myProfileImageUrl = await logic.uploadMyPicture(
                 bytesFromPicker!, "myProfileImages/$myFolderName");
 
-            //onpressed
+            // Image uploaded successfully
             if (myProfileImageUrl != null) {
               await logic.createUserOnFirebase(myProfileImageUrl);
+
+              // Show a successful upload animation/snackbar
+              Get.snackbar(
+                "Success",
+                "Image uploaded successfully!",
+                backgroundColor: Colors.green,
+                snackPosition: SnackPosition.BOTTOM,
+                icon: Icon(Icons.check_circle, color: Colors.white),
+                duration: Duration(seconds: 2),
+              );
             } else {
               print("Image couldn't be uploaded for some reason");
             }
@@ -201,32 +210,5 @@ class _Login_screenPageState extends State<Login_screenPage> {
             ))
       ],
     );
-  }
-
-  // This function will upload your image to Firebase Storage
-  Future<String?> uploadMyPicture(
-    Uint8List image,
-    String folderPath, // Path to the folder in Firebase Storage
-  ) async {
-    String? myDownloadUrl;
-
-    const String fileName = ''; // You can customize the filename
-
-    // Get path where you want to upload your profile pic
-    final Reference ref =
-        FirebaseStorage.instance.ref().child(folderPath).child(fileName);
-
-    try {
-      // Will upload your bytesImage data on firebase storage
-      await ref.putData(image);
-
-      // Will return the file download URL link
-      String downloadUrl = await ref.getDownloadURL();
-      myDownloadUrl = downloadUrl;
-      print('MyProfile Image uploaded successfully: $downloadUrl');
-    } catch (e) {
-      print('Error uploading thumbnail: $e');
-    }
-    return myDownloadUrl;
   }
 }
