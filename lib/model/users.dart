@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MyUser {
   String id;
   String name;
-  DateTime? createdAt;
+  String? createdAt;
   String? imageUrl;
 
   MyUser({required this.id, required this.name, this.imageUrl,this.createdAt, });
@@ -19,11 +21,12 @@ class MyUser {
 
   // Create a User object from a map
   factory MyUser.fromJson(Map<String, dynamic> json) {
+
     return MyUser(
       id: json['id'] as String,
       name: json['name'] as String,
       imageUrl: json['imageUrl'] as String?,
-      createdAt: json['createdAt'] as DateTime,
+      createdAt:json['createdAt'].toString(),
 
     );
   }

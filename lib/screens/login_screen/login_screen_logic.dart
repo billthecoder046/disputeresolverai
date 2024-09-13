@@ -48,7 +48,7 @@ class Login_screenLogic extends GetxController {
           String myUserId = myUser.user!.uid;
 
           // Create MyUser object (assuming `MyUser` class exists)
-          MyUser myUserData = MyUser(id: myUserId,name: userName.text,imageUrl:myProfileImageUrl,createdAt: DateTime.now() );
+          MyUser myUserData = MyUser(id: myUserId,name: userName.text,imageUrl:myProfileImageUrl,createdAt: DateTime.now().toString() );
 
           // Save user data to Firestore (you need to add the actual data)
           await FirebaseFirestore.instance.collection("Users").doc(myUserId).set(
