@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:disputeresolverai/screens/commonWidgets/buttons.dart';
 import 'package:disputeresolverai/screens/commonWidgets/fieldWidgets.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -34,13 +33,17 @@ class _Login_screenPageState extends State<Login_screenPage> {
               child: screenType.largerThan(TABLET)
                   ? showWebLoginScreen(context)
                   : screenType.largerThan(MOBILE)
-                  ? showTabLoginScreen(context)
-                  : showMobileLoginScreen(context),
+                      ? showTabLoginScreen(context)
+                      : showMobileLoginScreen(context),
             ),
           ),
           if (isLoading)
             Center(
-              child: CircularProgressIndicator(),
+              child: Image.asset(
+                'assets/images/loadingif.gif',
+                width: 90,
+                height: 90,
+              ),
             ),
         ],
       ),
@@ -142,15 +145,15 @@ class _Login_screenPageState extends State<Login_screenPage> {
             ),
             child: bytesFromPicker == null
                 ? SizedBox(
-                child: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/addicon.png'),
-                ))
+                    child: CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/addicon.png'),
+                  ))
                 : ClipOval(
-              child: Image.memory(
-                bytesFromPicker!,
-                fit: BoxFit.cover,
-              ),
-            ),
+                    child: Image.memory(
+                      bytesFromPicker!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
           ),
         ),
         Gap(16),
@@ -187,16 +190,18 @@ class _Login_screenPageState extends State<Login_screenPage> {
             } else {
               print("Image couldn't be uploaded for some reason");
             }
-
             setState(() {
               isLoading = false;
             });
-
-            print("Thank you!");
+            print("Thanks for time");
           },
           myButtonWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Icon(Icons.ads_click), Gap(6), Text("Signup")],
+            children: [
+              Icon(Icons.ads_click),
+              Gap(6),
+              Text("Signup"),
+            ],
           ),
         ),
         Gap(16),
