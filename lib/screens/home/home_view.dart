@@ -36,7 +36,14 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text("My home Screen"),
+        child: Column(
+          children: [
+            Text("My home Screen"),
+            TextButton(onPressed: () async{
+              await logic.getUsersFromFirebase();
+            }, child: Text("Get users"))
+          ],
+        ),
       ),
     );
   }
