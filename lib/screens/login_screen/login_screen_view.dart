@@ -8,8 +8,9 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
+import 'package:restartfromos/restartatos.dart';
 import 'login_screen_logic.dart';
+
 
 class Login_screenPage extends StatefulWidget {
   @override
@@ -91,7 +92,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
         Gap(16),
         MyTextField(myController: logic.emailC, hintText: "Enter Email"),
         Gap(16),
-        MyTextField(myController: logic.passC, hintText: "Enter Password"),
+        MyTextField(myController: logic.passC, hintText: "Enter Password",isPasswordField: true,),
         Gap(16),
         myFirstButton(
           myFunction: () async {
@@ -161,7 +162,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
         Gap(16),
         MyTextField(myController: logic.emailC, hintText: "Enter Email"),
         Gap(16),
-        MyTextField(myController: logic.passC, hintText: "Enter Password"),
+        MyTextField(myController: logic.passC, hintText: "Enter Password",isPasswordField: true,),
         Gap(16),
         myFirstButton(
           myFunction: () async {
@@ -180,7 +181,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
 
               // Show a successful upload animation/snackbar
               Get.snackbar(
-                "Success",
+                "Thanks for your time❤️",
                 "Image uploaded successfully!",
                 backgroundColor: Colors.green,
                 snackPosition: SnackPosition.BOTTOM,

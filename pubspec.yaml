@@ -46,6 +46,7 @@ dependencies:
   image_picker_web: ^4.0.0
   image_picker: ^1.1.2
   firebase_storage: ^12.2.0
+  restartfromos: ^0.0.3
 
 dev_dependencies:
   flutter_test:
