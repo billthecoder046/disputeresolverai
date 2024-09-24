@@ -13,35 +13,40 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Home Screen"),
+        title: Text("My Home Screen".tr),
         actions: [
-          IconButton(onPressed: () async{
-            var result = await showDialog(context: context, builder: (context){
-              return IsSureAlertBox(title: "Signing Out", content:"Are you sure to signout?".tr );
-            });
+          IconButton(
+              onPressed: () async {
+                var result = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return IsSureAlertBox(
+                          title: "Signing Out".tr,
+                          content: "Are you sure to signout?".tr);
+                    });
 
-            if(result == true){
-              var myCo = Get.find<Login_screenLogic>();
-              await myCo.logOut();
-              myCo.isSignedIn .value = true;
-              print("Signed Out successfully");
-              Get.snackbar(MyStrings.success, MyStrings.signedOutSuccessfully);
-            }
-            // else{
-            //   print("Signed Out successfully");
-            //   Get.snackbar(MyStrings.success, MyStrings.signedOutSuccessfully);
-            // }
+                if (result == true) {
+                  var myCo = Get.find<Login_screenLogic>();
+                  await myCo.logOut();
+                  myCo.isSignedIn.value = true;
+                  print("Signed Out successfully");
+                  Get.snackbar(
+                      MyStrings.success.tr, MyStrings.signedOutSuccessfully.tr);
+                }
 
-          }, icon: const Icon(Icons.logout))
+              },
+              icon: const Icon(Icons.logout))
         ],
       ),
       body: Center(
         child: Column(
           children: [
-            Text("My home Screen"),
-            TextButton(onPressed: () async{
-              await logic.getUsersFromFirebase();
-            }, child: Text("Get users"))
+            Text("My home Screen".tr),
+            TextButton(
+                onPressed: () async {
+                  await logic.getUsersFromFirebase();
+                },
+                child: Text("Get users".tr),),
           ],
         ),
       ),

@@ -6,18 +6,19 @@ class MyTextField extends StatefulWidget {
   String? hintText;
   bool isPasswordField;
 
-  MyTextField(
-      {super.key,
-      required this.myController,
-      this.hintText,
-      this.isPasswordField = false,});
+  MyTextField({
+    super.key,
+    required this.myController,
+    this.hintText,
+    this.isPasswordField = false,
+  });
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
 }
 
 class _MyTextFieldState extends State<MyTextField> {
-  bool _isObscured = true; // This controls password visibility
+  bool _isObscured = true;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +32,10 @@ class _MyTextFieldState extends State<MyTextField> {
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(12.0)),
         child: TextField(
-          obscuringCharacter: '*',
           controller: widget.myController,
           obscureText: widget.isPasswordField ? _isObscured : false,
-          // Show/hide password
           decoration: InputDecoration(
-            border: InputBorder.none, // Removes the underline
+            border: InputBorder.none,
             hintText: widget.hintText ?? "Enter value",
             suffixIcon: widget.isPasswordField
                 ? IconButton(
@@ -46,7 +45,7 @@ class _MyTextFieldState extends State<MyTextField> {
                     onPressed: () {
                       setState(() {
                         _isObscured =
-                            !_isObscured; // Toggle password visibility
+                            !_isObscured;
                       });
                     },
                   )

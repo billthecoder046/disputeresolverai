@@ -20,7 +20,7 @@ class Login_screenLogic extends GetxController {
   TextEditingController passC = TextEditingController();
   TextEditingController userName = TextEditingController();
 
-  //ifSignedInVariable
+  //ifSignedInVariable    
   RxBool isSignedIn = true.obs;
 
   //MyFunctions
@@ -41,7 +41,6 @@ class Login_screenLogic extends GetxController {
           email: emailC.text,
           password: passC.text,
         );
-
         if (myUser != null) {
           // Extract user ID
           String myUserId = myUser.user!.uid;
