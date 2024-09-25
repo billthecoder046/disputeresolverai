@@ -61,11 +61,11 @@ class _Login_screenPageState extends State<Login_screenPage> {
       children: [
         Gap(16),
         Text("Sign In Form",style: MyTextStyles.myTextStyleBlueLarge,),
-        Gap(16),
+        const Gap(16),
         MyTextField(myController: logic.emailC, hintText: "Enter Email"),
         Gap(16),
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
-        Gap(16),
+        const Gap(16),
         myFirstButton(
           myFunction: () async{
             print("My Email Data: ${logic.emailC.text}");
@@ -77,7 +77,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
             children: [Icon(Icons.ads_click), Gap(6), Text("Signin")],
           ),
         ),
-        Gap(16),
+        const Gap(16),
         TextButton(
             onPressed: () {
               logic.isSignedIn.value = !logic.isSignedIn.value;
@@ -94,14 +94,16 @@ class _Login_screenPageState extends State<Login_screenPage> {
     return Column(
       children: [
 
-        Gap(16),
+        const Gap(16),
         Text("Sign Up Form",style: MyTextStyles.myTextStyleBlueLarge,),
-        Gap(16),
+        const Gap(16),
 
         InkWell(
           onTap: () async {
             if (kIsWeb) {
-              print("perform image_picker_web package");
+              if (kDebugMode) {
+                print("perform image_picker_web package");
+              }
               bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
               setState(() {});
             } else if (Platform.isAndroid || Platform.isIOS) {
@@ -116,7 +118,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
               borderRadius: BorderRadius.circular(100),
             ),
             child: bytesFromPicker == null
-                ? SizedBox()
+                ? const SizedBox()
                 : ClipOval(
               child: Image.memory(bytesFromPicker!),
             ),
@@ -126,7 +128,7 @@ class _Login_screenPageState extends State<Login_screenPage> {
         MyTextField(myController: logic.userName, hintText: "Enter Username"),
         Gap(16),
         MyTextField(myController: logic.emailC, hintText: "Enter Email"),
-        Gap(16),
+        const Gap(16),
         MyTextField(myController: logic.passC, hintText: "Enter Password"),
         Gap(16),
         myFirstButton(
@@ -165,17 +167,13 @@ class _Login_screenPageState extends State<Login_screenPage> {
 
 
   //This function will upload your image to firebase storage
-  Future<String?> uploadMyPicture(
-      Uint8List image,
-      String folderPath, // Path to the folder in Firebase Storage
-      ) async {
+  Future<String?> uploadMyPicture(Uint8List image, String folderPath, ) async {
     String? myDownloadUrl;
 
     const String fileName = 'profile.jpg'; // You can customize the filename
 
     //Get path where you want to upload your profile pic
-    final Reference ref =
-    FirebaseStorage.instance.ref().child(folderPath).child(fileName);
+    final Reference ref =  FirebaseStorage.instance.ref().child(folderPath).child(fileName);
 
     try {
       //Will upload your bytesImage data on firebase storage
