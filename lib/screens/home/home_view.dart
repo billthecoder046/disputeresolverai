@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 import 'home_logic.dart';
 
-class Home_Screen_Page extends StatelessWidget {
+class HomePage extends StatelessWidget {
   final logic = Get.put(HomeLogic());
 
   @override
