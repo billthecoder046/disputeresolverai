@@ -5,11 +5,12 @@ import 'package:disputeresolverai/utilities/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'home_logic.dart';
 
 class HomePage extends StatelessWidget {
   final logic = Get.put(HomeLogic());
+
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("My Home Screen"),
+        title:  Text("My Home Screen".tr),
         actions: [
           IconButton(
               onPressed: () async {
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
                     builder: (context) {
                       return IsSureAlertBox(
                           title: "Signing Out",
-                          content: "Are you sure to signout?".tr);
+                          content: "Are you sure to sign out?".tr);
                     });
 
                 if (result == true) {
@@ -57,24 +58,32 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.all(12),
                   height: size.height * 0.8,
-                  // Adjust the height as a proportion
                   width: size.width,
-                  // Full width of the screen
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.grey.shade200,
                   ),
                   child: ListView.builder(
-                      itemCount: logic.myUsers.length,
-                      itemBuilder: (context, i) {
-                        return ListTile(
-                          trailing: Text(logic.myUsers[i].id,),
-                          title: Text(logic.myUsers[i].name),
-                          leading: Image.network(
-                            logic.myUsers[i].imageUrl ?? "NO Image ",
-                          ),
-                        );
-                      }),
+                    itemCount: logic.myUsers.length,
+                    itemBuilder: (context, i) {
+                      return ListTile(
+                        trailing: Text(
+                          logic.myUsers[i].id,
+                          style: const TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                        title: Text(
+                          logic.myUsers[i].name,
+                          style: const TextStyle(
+                              color: Colors.indigo,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        leading: Image.network(
+                          logic.myUsers[i].imageUrl ?? "NO Image ",
+                        ),
+                      );
+                    },
+                  ),
                 );
               } else {
                 return const Center(child: CircularProgressIndicator());
