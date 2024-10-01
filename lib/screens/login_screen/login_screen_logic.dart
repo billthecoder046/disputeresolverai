@@ -20,7 +20,7 @@ class Login_screenLogic extends GetxController {
   TextEditingController passC = TextEditingController();
   TextEditingController userName = TextEditingController();
 
-  //ifSignedInVariable    
+  //ifSignedInVariable
   RxBool isSignedIn = true.obs;
 
   //MyFunctions
@@ -36,14 +36,14 @@ class Login_screenLogic extends GetxController {
     } else {
       try {
         // Create user with Firebase Authentication
-        UserCredential? myUser =
+        UserCredential? userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailC.text,
           password: passC.text,
         );
-        if (myUser != null) {
+        if (userCredential.user != null) {
           // Extract user ID
-          String myUserId = myUser.user!.uid;
+          String myUserId = userCredential.user!.uid;
 
           // Create MyUser object (assuming `MyUser` class exists)
           MyUser myUserData = MyUser(
