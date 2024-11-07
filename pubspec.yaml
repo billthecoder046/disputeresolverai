@@ -41,6 +41,7 @@ dependencies:
   uuid: ^4.4.2
   get: ^4.6.6
   http: ^1.2.2
+  intl:
   responsive_framework: ^1.4.0
   gap: ^3.0.1
   image_picker_web: ^4.0.0
