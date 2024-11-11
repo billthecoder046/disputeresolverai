@@ -1,55 +1,61 @@
-import 'package:disputeresolverai/screens/commonWidgets/otherWidgets.dart';
-import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
-import 'package:disputeresolverai/utilities/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
+import '../../model/users.dart';
 import 'home_logic.dart';
 
-class HomePage extends StatelessWidget {
-  final logic = Get.put(HomeLogic());
+class Home_screenPage extends StatelessWidget {
+  Home_screenPage({Key? key}) : super(key: key);
+
+  final Details_screenLogic logic = Get.put(Details_screenLogic());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("My Home Screen".tr),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                var result = await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return IsSureAlertBox(
-                          title: "Signing Out".tr,
-                          content: "Are you sure to signout?".tr);
-                    });
+    return Scaffold(body: showUsers(context));
+  }
 
-                if (result == true) {
-                  var myCo = Get.find<Login_screenLogic>();
-                  await myCo.logOut();
-                  myCo.isSignedIn.value = true;
-                  print("Signed Out successfully");
-                  Get.snackbar(
-                      MyStrings.success.tr, MyStrings.signedOutSuccessfully.tr);
-                }
-
+  showUsers(context) {
+    return FutureBuilder(
+        future: logic.getUsersOnFirebase(),
+        builder: (context, AsyncSnapshot<List<Person>> snapshot) {
+          return Container(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: logic.myAllStudets.length,
+              itemBuilder: (context, i) {
+                return Row(
+                  children: [
+                    Card(
+                      elevation: 20,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Column(
+                          children: [
+                            Container(
+                              height:90,
+                              width: 90,
+                              child: ClipOval(
+                                child: Image.network(
+                                    logic.myAllStudets[i].imageUrl),
+                              ),
+                            ),
+                            Text(
+                              "My Name:\n${logic.myAllStudets[i].name}",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
               },
-              icon: const Icon(Icons.logout))
-        ],
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Text("My home Screen".tr),
-            TextButton(
-                onPressed: () async {
-                  await logic.getUsersFromFirebase();
-                },
-                child: Text("Get users".tr),),
-          ],
-        ),
-      ),
-    );
+            ),
+          );
+        });
   }
 }

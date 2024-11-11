@@ -1,182 +1,40 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disputeresolverai/screens/home/home_view.dart';
-import 'package:disputeresolverai/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../model/users.dart';
-import 'login_screen_view.dart';
+import '../home/home_view.dart';
 
-class Login_screenLogic extends GetxController {
-  //MyVariables
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-  TextEditingController emailC = TextEditingController();
-  TextEditingController passC = TextEditingController();
+class SignUp_screeenLogic extends GetxController {
   TextEditingController userName = TextEditingController();
+  TextEditingController passC = TextEditingController();
+  TextEditingController emailC = TextEditingController();
 
-  //ifSignedInVariable
-  RxBool isSignedIn = true.obs;
-
-  //MyFunctions
-  Future<void> createUserOnFirebase(String myProfileImageUrl) async {
-    if (emailC.text.isEmpty || passC.text.isEmpty) {
-      Get.snackbar(
-        'Email or password is empty',
-        "Both are required",
-        colorText: Colors.white,
-        backgroundColor: Colors.lightBlue,
-        icon: const Icon(Icons.add_alert),
-      );
+  createUserOnfirebase(String myImgUrl) async {
+    if (userName.text.isEmpty || emailC.text.isEmpty || passC.text.isEmpty) {
+      Get.snackbar('Error', 'teno khali ha');
     } else {
       try {
-        // Create user with Firebase Authentication
-        UserCredential? userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailC.text,
-          password: passC.text,
-        );
-        if (userCredential.user != null) {
-          // Extract user ID
-          String myUserId = userCredential.user!.uid;
-
-          // Create MyUser object (assuming `MyUser` class exists)
-          MyUser myUserData = MyUser(
-              id: myUserId,
-              name: userName.text,
-              imageUrl: myProfileImageUrl,
-              createdAt: DateTime.now().toString());
-
-          // Save user data to Firestore (you need to add the actual data)
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(myUserId)
-              .set(myUserData.toJson());
-
-          // Navigate to HomePage with transition (assuming HomePage exists)
-          Get.to(
-            () => HomePage(),
-            transition: Transition.leftToRight,
+        UserCredential myUser = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+            email: emailC.text, password: passC.text);
+        if (myUser != null) {
+          String name = userName.text;
+          // Create a new Person instance with the current date and time
+          Person person = Person(
+              name: name,
+              imageUrl: myImgUrl,
+              createdAt: DateTime.now() // Set createdAt to current time
           );
-        } else {
-          // Show snackbar for failed user creation
-          Get.snackbar(
-            MyStrings.someErrorOccurred.tr,
-            MyStrings.userCantLogin.tr,
+          // Save the person object to Firestore
+          FirebaseFirestore.instance.collection("Persons").doc(name).set(
+            person.toJson(),
           );
+          Get.to(() => Home_screenPage());
         }
-      } on FirebaseAuthException catch (e) {
-        // Handle specific FirebaseAuth exceptions (recommended)
-        String message = "";
-        switch (e.code) {
-          case "weak-password":
-            message = "Password is too weak.";
-            break;
-          case "email-already-in-use":
-            message = "Email already exists.";
-            break;
-          default:
-            message = MyStrings.someErrorOccurred.tr;
-        }
-        Get.snackbar("Error Creating User", message,
-            colorText: Colors.white,
-            backgroundColor: Colors.lightBlue,
-            icon: const Icon(Icons.add_alert));
       } catch (e) {
-        // Catch other exceptions (generic error handling)
-        print(e);
-        Get.snackbar(
-          'Some issue occurred',
-          e.toString(),
-          // Avoid showing complete error message for security reasons
-          colorText: Colors.white,
-          backgroundColor: Colors.lightBlue,
-          icon: const Icon(Icons.add_alert),
-        );
-      } finally {
-        print("Thankyou for your time"); // This can be removed if not needed
+        print("apna error set karo $e");
       }
     }
-  }
-
-  Future<void> signInUserOnApp() async {
-    if (emailC.text.isEmpty || passC.text.isEmpty) {
-      Get.snackbar(
-        'Email or password is empty',
-        "Both are required",
-        colorText: Colors.white,
-        backgroundColor: Colors.lightBlue,
-        icon: const Icon(Icons.add_alert),
-      );
-    } else {
-      try {
-        Get.to(() => HomePage(), transition: Transition.leftToRight);
-      } catch (e) {
-        print(e);
-        Get.snackbar(
-          'Some issue occurred',
-          e.toString(),
-          colorText: Colors.white,
-          backgroundColor: Colors.lightBlue,
-          icon: const Icon(Icons.add_alert),
-        );
-      } finally {
-        print("Thankyou for your time");
-      }
-    }
-  }
-
-  //
-
-  Future<void> loginUser() async {
-    try {
-      UserCredential myUser = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailC.text, password: passC.text);
-      if (myUser != null) {
-        Get.to(() => HomePage(), transition: Transition.leftToRight);
-      } else {
-        Get.snackbar(
-            MyStrings.someErrorOccurred.tr, MyStrings.userCantLogin.tr);
-      }
-    } catch (e) {
-      print(e);
-      Get.snackbar(MyStrings.someErrorOccurred.tr, e.toString());
-    }
-  }
-
-  Future<String?> uploadMyPicture(
-    Uint8List image,
-    String folderPath,
-  ) async {
-    String? myDownloadUrl;
-
-    const String fileName = 'profile.jpg';
-
-    final Reference ref =
-        FirebaseStorage.instance.ref().child(folderPath).child(fileName);
-
-    try {
-      // Will upload your bytesImage data on firebase storage
-      await ref.putData(image);
-
-      // Will return the file download URL link
-      String downloadUrl = await ref.getDownloadURL();
-      myDownloadUrl = downloadUrl;
-      print('MyProfile Image uploaded successfully: $downloadUrl');
-    } catch (e) {
-      print('Error uploading thumbnail: $e');
-    }
-    return myDownloadUrl;
-  }
-
-  //MyFunctions
-  Future<void> logOut() async {
-    await _firebaseAuth.signOut();
-    Get.offAll(Login_screenPage());
   }
 }

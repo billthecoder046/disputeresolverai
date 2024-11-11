@@ -44,8 +44,7 @@ class _MyTextFieldState extends State<MyTextField> {
                     ),
                     onPressed: () {
                       setState(() {
-                        _isObscured =
-                            !_isObscured;
+                        _isObscured = !_isObscured;
                       });
                     },
                   )
