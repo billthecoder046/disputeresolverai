@@ -1,5 +1,6 @@
 import 'package:disputeresolverai/screens/home/home_view.dart';
 import 'package:disputeresolverai/screens/login_screen/login_screen_view.dart';
+import 'package:disputeresolverai/screens/signup/signup_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

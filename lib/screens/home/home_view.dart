@@ -67,8 +67,9 @@ class HomePage extends StatelessWidget {
                 itemBuilder: (context, i) {
                   DateTime dateTime = DateTime.parse(logic.myUsers[i].createdAt.toString());
                   String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
-                  String formattedDate = DateFormat('hh:mm:ss').format(dateTime);
+                  String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
                   return ListTile(
+                    onTap: (){},
                     trailing: Text(
                       logic.myUsers[i].id,
                       style: const TextStyle(
