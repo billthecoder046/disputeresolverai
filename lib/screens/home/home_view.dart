@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../model/users.dart';
 import 'home_logic.dart';
@@ -24,30 +25,48 @@ class Home_screenPage extends StatelessWidget {
               scrollDirection: Axis.vertical,
               itemCount: logic.myAllStudets.length,
               itemBuilder: (context, i) {
-                return Row(
+                DateTime dateTime =
+                    DateTime.parse(logic.myAllStudets[i].createdAt.toString());
+                String papuDateAndTime =
+                    DateFormat.yMd().add_jm().format(dateTime);
+                return Column(
                   children: [
                     Card(
+                      margin: EdgeInsets.symmetric(vertical: 10),
                       elevation: 20,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       child: Container(
-                        height: 150,
-                        width: 150,
+                        padding: EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Column(
-                          children: [
-                            Container(
-                              height:90,
-                              width: 90,
-                              child: ClipOval(
-                                child: Image.network(
-                                    logic.myAllStudets[i].imageUrl),
-                              ),
-                            ),
-                            Text(
-                              "My Name:\n${logic.myAllStudets[i].name}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
                             ),
                           ],
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            logic.myAllStudets[i].name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal.shade900,
+                            ),
+                          ),
+                          leading: ClipOval(
+                            child: Image.network(
+                              logic.myAllStudets[i].imageUrl,
+                              height: 120,
+                              width: 120,
+                            ),
+                          ),
+                          subtitle: Text('$papuDateAndTime'),
                         ),
                       ),
                     ),
