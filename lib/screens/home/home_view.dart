@@ -75,6 +75,7 @@ class HomePage extends StatelessWidget {
                       style: const TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
                     ),
+
                     title: Text(
                       logic.myUsers[i].name.toUpperCase(),
                       style: const TextStyle(
