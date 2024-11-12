@@ -32,7 +32,7 @@ class MyRootWidget extends StatelessWidget {
         const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
       ],
     ),
-      home: Home_screenPage(),
+      home:SignUpScreen(),
     );
   }
 }
