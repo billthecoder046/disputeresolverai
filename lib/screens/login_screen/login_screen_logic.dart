@@ -86,6 +86,7 @@ class Login_screenLogic extends GetxController {
     }
 
   }
+  //d
 
   //MyFunctions
   Future<void> logOut() async{
