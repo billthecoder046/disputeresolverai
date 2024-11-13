@@ -43,31 +43,23 @@ class Login_screenLogic extends GetxController {
           password: passC.text,
         );
 
-        if (myUser != null) {
-          // Extract user ID
-          String myUserId = myUser.user!.uid;
+        // Extract user ID
+        String myUserId = myUser.user!.uid;
 
-          // Create MyUser object (assuming `MyUser` class exists)
-          MyUser myUserData = MyUser(id: myUserId,name: userName.text,imageUrl:myProfileImageUrl,createdAt: DateTime.now().toString() );
+        // Create MyUser object (assuming `MyUser` class exists)
+        MyUser myUserData = MyUser(id: myUserId,name: userName.text,imageUrl:myProfileImageUrl,createdAt: DateTime.now().microsecondsSinceEpoch );
 
-          // Save user data to Firestore (you need to add the actual data)
-          await FirebaseFirestore.instance.collection("Users").doc(myUserId).set(
-            myUserData.toJson()
-          );
+        // Save user data to Firestore (you need to add the actual data)
+        await FirebaseFirestore.instance.collection("Users").doc(myUserId).set(
+          myUserData.toJson()
+        );
 
-          // Navigate to HomePage with transition (assuming HomePage exists)
-          Get.to(
-                () => HomePage(),
-            transition: Transition.leftToRight,
-          );
-        } else {
-          // Show snackbar for failed user creation
-          Get.snackbar(
-            MyStrings.someErrorOccurred.tr,
-            MyStrings.userCantLogin.tr,
-          );
-        }
-      } on FirebaseAuthException catch (e) {
+        // Navigate to HomePage with transition (assuming HomePage exists)
+        Get.to(
+              () => HomePage(),
+          transition: Transition.leftToRight,
+        );
+            } on FirebaseAuthException catch (e) {
         // Handle specific FirebaseAuth exceptions (recommended)
         String message = "";
         switch (e.code) {
@@ -129,12 +121,8 @@ class Login_screenLogic extends GetxController {
   Future<void> loginUser() async{
       try {
         UserCredential myUser = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailC.text, password: passC.text);
-        if(myUser != null){
-          Get.to(()=> HomePage(), transition: Transition.leftToRight);
-              }else{
-                Get.snackbar(MyStrings.someErrorOccurred.tr,MyStrings.userCantLogin.tr);
-              }
-      } catch (e) {
+        Get.to(()=> HomePage(), transition: Transition.leftToRight);
+                  } catch (e) {
         print(e);
         Get.snackbar(MyStrings.someErrorOccurred.tr,e.toString());
       }

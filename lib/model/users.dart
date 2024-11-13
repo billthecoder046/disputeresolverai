@@ -1,15 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyUser {
   String id;
   String name;
-  String? createdAt;
+  int? createdAt;
   String? imageUrl;
 
   MyUser({required this.id, required this.name, this.imageUrl,this.createdAt, });
 
   // Convert a User object into a map
   Map<String, dynamic> toJson() {
+
+
     return {
       'id': id,
       'name': name,
@@ -26,7 +27,7 @@ class MyUser {
       id: json['id'] as String,
       name: json['name'] as String,
       imageUrl: json['imageUrl'] as String?,
-      createdAt:json['createdAt'].toString(),
+      createdAt:json['createdAt'],
 
     );
   }
