@@ -20,7 +20,6 @@ class MyUser {
   // Create a User object from a map
   factory MyUser.fromJson(Map<String, dynamic> json) {
     if(json['createdAt'].runtimeType == int){
-
       return MyUser(
         id: json['id'] as String,
         name: json['name'] as String,

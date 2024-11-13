@@ -71,7 +71,6 @@ class HomePage extends StatelessWidget {
                   }else{
                     dateTime  = DateTime.parse(logic.myUsers[i].createdAt.toString());
                   }
-
                   String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
                   String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
                   return ListTile(
