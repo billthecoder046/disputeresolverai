@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class MyTextField extends StatefulWidget {
   TextEditingController myController = TextEditingController();
@@ -18,10 +17,17 @@ class _MyTextFieldState extends State<MyTextField> {
       elevation: 8.0,
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.only(left: 12),
+        padding: const EdgeInsets.only(left: 12),
         width: size.width * .75,
         decoration:
-            BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12.0)),
+            BoxDecoration(color: Colors.white,
+                borderRadius: BorderRadius.circular(12.0)
+      //           borderRadius: BorderRadius.only(
+      //           bottomLeft: Radius.circular(26.0),
+      //   topRight: Radius.circular(26.0),
+      // )
+
+            ),
         child:  TextField(
           controller: widget.myController,
           decoration: InputDecoration(

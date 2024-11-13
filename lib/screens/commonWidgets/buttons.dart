@@ -18,6 +18,10 @@ class myFirstButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Padding
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10), // Rounded corners
+              // borderRadius: BorderRadius.only(
+              //   bottomLeft: Radius.circular(26.0),
+              //   topRight: Radius.circular(26.0),
+              // )
           ),
           shadowColor: Colors.black, // Shadow color
         ),

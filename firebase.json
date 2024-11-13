@@ -1,1 +1,59 @@
-{"firestore":{"rules":"firestore.rules","indexes":"firestore.indexes.json"},"functions":[{"source":"functions","codebase":"default","ignore":["node_modules",".git","firebase-debug.log","firebase-debug.*.log","*.local"]}],"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"]},"storage":{"rules":"storage.rules"},"flutter":{"platforms":{"android":{"default":{"projectId":"disputeresolver-62c3b","appId":"1:947167872796:android:f0eeff5e05ae80ce699cd9","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"disputeresolver-62c3b","appId":"1:947167872796:ios:f05f89148afd9e60699cd9","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"disputeresolver-62c3b","configurations":{"android":"1:947167872796:android:f0eeff5e05ae80ce699cd9","ios":"1:947167872796:ios:f05f89148afd9e60699cd9","web":"1:947167872796:web:1304ba56842eefe2699cd9"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ],
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "disputeresolver-62c3b",
+          "appId": "1:947167872796:android:f0eeff5e05ae80ce699cd9",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "disputeresolver-62c3b",
+          "appId": "1:947167872796:ios:f05f89148afd9e60699cd9",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "disputeresolver-62c3b",
+          "configurations": {
+            "android": "1:947167872796:android:f0eeff5e05ae80ce699cd9",
+            "ios": "1:947167872796:ios:f05f89148afd9e60699cd9",
+            "web": "1:947167872796:web:1304ba56842eefe2699cd9"
+          }
+        }
+      }
+    }
+  }
+}
