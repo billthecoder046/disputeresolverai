@@ -1,29 +1,80 @@
-import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../../model/users.dart';
 import 'home_logic.dart';
 
-class HomePage extends StatelessWidget {
-  final logic = Get.put(HomeLogic());
+class Home_screenPage extends StatelessWidget {
+  Home_screenPage({Key? key}) : super(key: key);
+
+  final Details_screenLogic logic = Get.put(Details_screenLogic());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("My Home Screen"),
-        actions: [
-          IconButton(onPressed: () async{
-            var myCo = Get.find<Login_screenLogic>();
-            await myCo.logOut();
-            myCo.isSignedIn .value = true;
-            print("Signed Out successfully");
-          }, icon: const Icon(Icons.logout))
-        ],
-      ),
-      body: Center(
-        child: Text("My home Screen"),
-      ),
-    );
+    return Scaffold(body: showUsers(context));
+  }
+
+  showUsers(context) {
+    return FutureBuilder(
+        future: logic.getUsersOnFirebase(),
+        builder: (context, AsyncSnapshot<List<Person>> snapshot) {
+          return Container(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: logic.myAllStudets.length,
+              itemBuilder: (context, i) {
+                DateTime dateTime =
+                    DateTime.parse(logic.myAllStudets[i].createdAt.toString());
+                String papuDateAndTime =
+                    DateFormat.yMd().add_jm().format(dateTime);
+                return Column(
+                  children: [
+                    Card(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      elevation: 20,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            logic.myAllStudets[i].name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal.shade900,
+                            ),
+                          ),
+                          leading: ClipOval(
+                            child: Image.network(
+                              logic.myAllStudets[i].imageUrl,
+                              height: 120,
+                              width: 120,
+                            ),
+                          ),
+                          subtitle: Text('$papuDateAndTime'),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        });
   }
 }

@@ -1,25 +1,36 @@
-class User {
-  String id;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Person {
   String name;
-  String? imageUrl;
+  String? color;
+  String imageUrl;
+  DateTime createdAt; // Ensure this is non-nullable if you always want a timestamp
 
-  User({required this.id, required this.name, this.imageUrl});
+  // Constructor using named parameters
+  Person({
+    required this.name,
+    this.color,
+    required this.imageUrl,
+    required this.createdAt, // Required parameter (non-nullable)
+  });
 
-  // Convert a User object into a map
+  // Method to convert a Person instance to a JSON map
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
+      'color': color,
       'imageUrl': imageUrl,
+      'createdAt': Timestamp.fromDate(createdAt), // Convert DateTime to Timestamp
     };
   }
 
-  // Create a User object from a map
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'] as String,
+  // Factory constructor to create a Person instance from a JSON map
+  factory Person.fromJson(Map<String, dynamic> json) {
+    return Person(
       name: json['name'] as String,
-      imageUrl: json['imageUrl'] as String?,
+      color: json['color'] ?? 'Em',
+      imageUrl: json['imageUrl'] as String,
+      createdAt: (json['createdAt'] as Timestamp).toDate(), // Convert Timestamp to DateTime
     );
   }
 }
