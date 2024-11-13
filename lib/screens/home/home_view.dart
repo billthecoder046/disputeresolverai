@@ -65,7 +65,13 @@ class HomePage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: logic.myUsers.length,
                 itemBuilder: (context, i) {
-                  DateTime dateTime = DateTime.parse(logic.myUsers[i].createdAt.toString());
+                  DateTime dateTime ;
+                  if(logic.myUsers[i].createdAt.runtimeType == int){
+                    dateTime  = DateTime.fromMicrosecondsSinceEpoch(logic.myUsers[i].createdAt!);
+                  }else{
+                    dateTime  = DateTime.parse(logic.myUsers[i].createdAt.toString());
+                  }
+
                   String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
                   String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
                   return ListTile(
