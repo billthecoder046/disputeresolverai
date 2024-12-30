@@ -1,10 +1,10 @@
 import 'package:disputeresolverai/screens/home/home_view.dart';
-import 'package:disputeresolverai/screens/login_screen/sign_up_screen.dart';
+import 'package:disputeresolverai/screens/login_screen/login_screen_view.dart';
+import 'package:disputeresolverai/screens/signup/signup_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import 'firebase_options.dart';
 
 void main() async {
@@ -12,17 +12,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyRootWidget());
+  runApp(const MyRootWidget());
 }
 class MyRootWidget extends StatelessWidget {
   const MyRootWidget({super.key});
-
   @override
   Widget build(BuildContext context) {
-    //I'have merged bilalwork into master branch
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
        debugShowCheckedModeBanner: false,
+
        builder: (context, child) => ResponsiveBreakpoints.builder(
       child: child!,
       breakpoints: [
@@ -32,8 +31,8 @@ class MyRootWidget extends StatelessWidget {
         const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
       ],
     ),
-      home:SignUpScreen(),
+      home: HomePage(),
     );
   }
 }
-
+/// ok project open
