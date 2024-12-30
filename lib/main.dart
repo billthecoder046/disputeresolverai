@@ -1,5 +1,4 @@
 import 'package:disputeresolverai/screens/login_screen/sign_up_screen.dart';
-import 'package:disputeresolverai/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,7 +30,7 @@ class MyRootWidget extends StatelessWidget {
         const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
       ],
     ),
-      home:const AuthWrapper(),
+      home:SignUpScreen(),
     );
   }
 }
