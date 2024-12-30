@@ -19,25 +19,24 @@ class MyUser {
 
   // Create a User object from a map
   factory MyUser.fromJson(Map<String, dynamic> json) {
-    if(json['createdAt'].runtimeType == int){
+    dynamic createdAtValue = json['createdAt'];
 
-      return MyUser(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        imageUrl: json['imageUrl'] as String?,
-        createdAt:json['createdAt'],
-      );
-    }else{
-      DateTime myDate = DateTime.parse(json ['createdAt']) ;
-      int myMicrosecondsDate = myDate.microsecondsSinceEpoch ;
-      return MyUser(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        imageUrl: json['imageUrl'] as String?,
-        createdAt:myMicrosecondsDate,
-      );
+    int createdAtTimestamp;
+
+    if (createdAtValue is int) {
+      createdAtTimestamp = createdAtValue;
+    } else if (createdAtValue is String) {
+      DateTime createdAtDate = DateTime.parse(createdAtValue);
+      createdAtTimestamp = createdAtDate.microsecondsSinceEpoch;
+    } else {
+      throw Exception("Invalid createdAt type in JSON");
     }
 
-
+    return MyUser(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      imageUrl: json['imageUrl'] as String?,
+      createdAt: createdAtTimestamp,
+    );
   }
 }
