@@ -2,7 +2,6 @@ import 'package:disputeresolverai/model/users.dart';
 import 'package:disputeresolverai/screens/commonWidgets/otherWidgets.dart';
 import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +19,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("My Home Screen".tr),
+        title:  Text("My Home Screen".tr),
         actions: [
           IconButton(
               onPressed: () async {
@@ -66,49 +65,43 @@ class HomePage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: logic.myUsers.length,
                 itemBuilder: (context, i) {
-                  DateTime dateTime;
-                  if (logic.myUsers[i].createdAt.runtimeType == int) {
-                    dateTime = DateTime.fromMicrosecondsSinceEpoch(
-                        logic.myUsers[i].createdAt!);
-                  } else {
-                    dateTime =
-                        DateTime.parse(logic.myUsers[i].createdAt.toString());
+                  DateTime dateTime ;
+                  if(logic.myUsers[i].createdAt.runtimeType == int){
+                    dateTime  = DateTime.fromMicrosecondsSinceEpoch(logic.myUsers[i].createdAt!);
+                  }else{
+                    dateTime  = DateTime.parse(logic.myUsers[i].createdAt.toString());
                   }
+                  String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
+                  String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
+                  return ListTile(
+                    onTap: (){},
+                    trailing: Text(
+                      logic.myUsers[i].id,
+                      style: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
+                    ),
 
-                  String papuDate =
-                      DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
-                  String formattedDate =
-                      DateFormat('hh:mm:ss a').format(dateTime);
-                  return FirebaseAuth.instance.currentUser!.uid ==
-                          logic.myUsers[i].id
-                      ? Container()
-                      : ListTile(
-                          onTap: () {},
-                          trailing: Text(
-                            logic.myUsers[i].id,
-                            style: const TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                          title: Text(
-                            logic.myUsers[i].name.toUpperCase(),
-                            style: const TextStyle(
-                                color: Colors.indigo,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text("$papuDate $formattedDate"),
-                          leading: Container(
-                            height: 80,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Colors.red),
-                            child: ClipOval(
-                              child: Image.network(
-                                logic.myUsers[i].imageUrl ?? "NO Image ",
-                              ),
-                            ),
-                          ),
-                        );
+                    title: Text(
+                      logic.myUsers[i].name.toUpperCase(),
+                      style: const TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text("$papuDate $formattedDate"),
+                    leading: Container(
+                      height: 80,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.red
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          logic.myUsers[i].imageUrl ?? "NO Image ",
+                        ),
+                      ),
+                    ),
+                  );
                 },
               ),
             );
@@ -120,5 +113,6 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
 
 ///
