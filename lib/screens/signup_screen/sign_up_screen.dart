@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 
+import '../../login_screen/view.dart';
 import 'sign_up_screeen_logic.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -171,6 +172,16 @@ class _SignUpScreenState extends State<SignUpScreen>
                       ),
                     ),
                   ),
+                  const Gap(16),
+                  TextButton(
+                    onPressed: () {
+                      _navigateToLogin();
+                    },
+                    child: const Text(
+                      "Already have an account? Login",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -194,4 +205,9 @@ class _SignUpScreenState extends State<SignUpScreen>
       return null;
     }
   }
+
+  void _navigateToLogin() {
+    Get.to(() => Login_screenPage()); // Navigate to the Login screen.
+  }
 }
+
