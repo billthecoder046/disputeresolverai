@@ -36,4 +36,3 @@ class MyRootWidget extends StatelessWidget {
     );
   }
 }
-

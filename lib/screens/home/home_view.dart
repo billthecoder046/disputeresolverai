@@ -1,5 +1,6 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -25,10 +26,15 @@ class Home_screenPage extends StatelessWidget {
               scrollDirection: Axis.vertical,
               itemCount: logic.myAllStudets.length,
               itemBuilder: (context, i) {
-                DateTime dateTime =
-                    DateTime.parse(logic.myAllStudets[i].createdAt.toString());
+                DateTime dateTime;
+                if (logic.myAllStudets[i].createdAt.runtimeType == int) {
+                  dateTime = DateTime.fromMicrosecondsSinceEpoch(logic.myAllStudets[i].createdAt);
+                } else {
+                  dateTime = DateTime.parse(logic.myAllStudets[i].createdAt.toString());
+                }
+                DateTime adjustedDateTime = dateTime.subtract(Duration(days: 20));
                 String papuDateAndTime =
-                    DateFormat.yMd().add_jm().format(dateTime);
+                DateFormat.yMd().add_jm().format(adjustedDateTime);
                 return Column(
                   children: [
                     Card(
@@ -59,7 +65,23 @@ class Home_screenPage extends StatelessWidget {
                               color: Colors.teal.shade900,
                             ),
                           ),
-                          leading: ClipOval(
+                          leading: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Image.network(
+                                        logic.myAllStudets[i].imageUrl,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                             child: Image.network(
                               logic.myAllStudets[i].imageUrl,
                               height: 120,

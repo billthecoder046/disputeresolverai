@@ -10,26 +10,42 @@ class SignUp_screeenLogic extends GetxController {
   TextEditingController passC = TextEditingController();
   TextEditingController emailC = TextEditingController();
 
-  createUserOnfirebase(String myImgUrl) async {
+  Future<bool> userNameAvailable(String username) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Persons')
+        .where('name', isEqualTo: username).get();
+    List<DocumentSnapshot> saim= querySnapshot.docs;
+    if(saim.isEmpty){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  Future<void> createUserOnfirebase(String myImgUrl) async {
     if (userName.text.isEmpty || emailC.text.isEmpty || passC.text.isEmpty) {
       Get.snackbar('Error', 'teno khali ha');
     } else {
       try {
+        bool isAvailable =await userNameAvailable(userName.text);
+        if(isAvailable ==true){
+          Get.snackbar('Error', 'User is already exist');
+        }
         UserCredential myUser = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
-            email: emailC.text, password: passC.text);
+                email: emailC.text, password: passC.text);
         if (myUser != null) {
           String name = userName.text;
           // Create a new Person instance with the current date and time
           Person person = Person(
-              name: name,
-              imageUrl: myImgUrl,
-              createdAt: DateTime.now() // Set createdAt to current time
+            name: name,
+            imageUrl: myImgUrl,
+            createdAt: DateTime.now().microsecondsSinceEpoch,
           );
           // Save the person object to Firestore
           FirebaseFirestore.instance.collection("Persons").doc(name).set(
-            person.toJson(),
-          );
+                person.toJson(),
+              );
           Get.to(() => Home_screenPage());
         }
       } catch (e) {
@@ -37,4 +53,5 @@ class SignUp_screeenLogic extends GetxController {
       }
     }
   }
+
 }

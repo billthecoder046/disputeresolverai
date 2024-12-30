@@ -4,14 +4,13 @@ class Person {
   String name;
   String? color;
   String imageUrl;
-  DateTime createdAt; // Ensure this is non-nullable if you always want a timestamp
+  int createdAt;
 
-  // Constructor using named parameters
   Person({
     required this.name,
     this.color,
     required this.imageUrl,
-    required this.createdAt, // Required parameter (non-nullable)
+    required this.createdAt,
   });
 
   // Method to convert a Person instance to a JSON map
@@ -20,17 +19,32 @@ class Person {
       'name': name,
       'color': color,
       'imageUrl': imageUrl,
-      'createdAt': Timestamp.fromDate(createdAt), // Convert DateTime to Timestamp
+      'createdAt': createdAt,
     };
   }
 
   // Factory constructor to create a Person instance from a JSON map
   factory Person.fromJson(Map<String, dynamic> json) {
-    return Person(
-      name: json['name'] as String,
-      color: json['color'] ?? 'Em',
-      imageUrl: json['imageUrl'] as String,
-      createdAt: (json['createdAt'] as Timestamp).toDate(), // Convert Timestamp to DateTime
-    );
+    if(json['createdAt'].runtimeType == int ){
+      return Person(
+        name: json['name'] as String,
+        color: json['color'] ?? 'Em',
+        imageUrl: json['imageUrl'] as String,
+        createdAt: (json['createdAt']),
+      );
+    }
+    else{
+      DateTime myDate =DateTime.parse(json['createdAt']);
+      int myMicroSecondDate = myDate.microsecondsSinceEpoch;
+
+      return Person(
+        name: json['name'] as String,
+        color: json['color'] ?? 'Em',
+        imageUrl: json['imageUrl'] as String,
+        createdAt: myMicroSecondDate,
+      );
+    }
+
+
   }
 }

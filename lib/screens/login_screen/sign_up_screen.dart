@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -15,91 +14,166 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen>
+    with SingleTickerProviderStateMixin {
   final SignUp_screeenLogic logic = Get.put(SignUp_screeenLogic());
   Uint8List? _selectedImage;
   bool _isLoading = false;
 
+  late AnimationController _animationController;
+  late Animation<double> _buttonAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    _buttonAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          // Allows scrolling if content overflows
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            // Align children to stretch horizontally
-            children: [
-              InkWell(
-                onTap: () async {
-                  _selectedImage = await ImagePickerWeb.getImageAsBytes();
-                  setState(() {});
-                },
-                child: Center(
-                  // Center the avatar
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.grey[300],
-                    backgroundImage: _selectedImage != null
-                        ? MemoryImage(_selectedImage!)
-                        : null,
-                    child: _selectedImage == null
-                        ? const Icon(Icons.person_add, size: 60)
-                        : null,
+      appBar: AppBar(
+        title: const Text('Sign Up'),
+        backgroundColor: Colors.deepPurpleAccent,
+      ),
+      body: Center(
+        child: Card(
+          elevation: 8,
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      _selectedImage = await ImagePickerWeb.getImageAsBytes();
+                      setState(() {});
+                    },
+                    child: Center(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.grey[300],
+                            backgroundImage: _selectedImage != null
+                                ? MemoryImage(_selectedImage!)
+                                : null,
+                          ),
+                          if (_selectedImage == null)
+                            const Icon(Icons.camera_alt,
+                                size: 40, color: Colors.grey),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const Gap(20),
-              TextFormField(
-                controller: logic.userName,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const Gap(16),
-              TextFormField(
-                controller: logic.emailC,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const Gap(16),
-              TextFormField(
-                controller: logic.passC,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-              ),
-              const Gap(24),
-              ElevatedButton(
-                onPressed: _isLoading
-                    ? null
-                    : () async {
-                        setState(() => _isLoading = true);
-                        String username = logic.userName.text;
-                        String? imageUrl =
-                            await _uploadImage(username, _selectedImage!);
+                  const Gap(10),
+                  if (_selectedImage == null)
+                    const Text(
+                      "Tap to upload profile picture",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                  const Gap(20),
+                  TextFormField(
+                    controller: logic.userName,
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextFormField(
+                    controller: logic.emailC,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const Gap(16),
+                  TextFormField(
+                    controller: logic.passC,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                  const Gap(24),
+                  InkWell(
+                    onTap: _isLoading
+                        ? null
+                        : () async {
+                      _animationController.forward().whenComplete(() {
+                        _animationController.reset();
+                      });
 
-                        if (imageUrl != null) {
-                          await logic.createUserOnfirebase(imageUrl);
-                        }
+                      setState(() => _isLoading = true);
+                      String username = logic.userName.text;
+                      String? imageUrl =
+                      await _uploadImage(username, _selectedImage!);
 
-                        setState(() => _isLoading = false);
-                      },
-                child: _isLoading
-                    ? const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                    : const Text('Sign Up'),
+                      if (imageUrl != null) {
+                        await logic.createUserOnfirebase(imageUrl);
+                      }
+
+                      setState(() => _isLoading = false);
+                    },
+                    child: ScaleTransition(
+                      scale: _buttonAnimation,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: Colors.deepPurpleAccent,
+                        ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white),
+                        )
+                            : const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: null,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -109,7 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<String?> _uploadImage(String folderPath, Uint8List image) async {
     const String filename = 'profile.jpg';
     final Reference ref =
-        FirebaseStorage.instance.ref().child(folderPath).child(filename);
+    FirebaseStorage.instance.ref().child(folderPath).child(filename);
 
     try {
       await ref.putData(image);

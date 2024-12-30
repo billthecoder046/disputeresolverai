@@ -448,14 +448,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  restartfromos:
-    dependency: "direct main"
-    description:
-      name: restartfromos
-      sha256: "1f6e131be600aa8b40128df58f2025ab2723ce1c46d60b06746c55f4849096cd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -558,5 +550,5 @@ packages:
     source: hosted
     version: "0.5.1"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.1 <4.0.0"
   flutter: ">=3.22.0"
