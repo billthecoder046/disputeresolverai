@@ -1,47 +1,39 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Person {
+class MyUser {
+  String id;
   String name;
-  String? color;
-  String imageUrl;
-  int createdAt;
+  int? createdAt;
+  String? imageUrl;
 
-  Person({
-    required this.name,
-    this.color,
-    required this.imageUrl,
-    required this.createdAt,
-  });
+  MyUser({required this.id, required this.name, this.imageUrl,this.createdAt, });
 
-  // Method to convert a Person instance to a JSON map
+  // Convert a User object into a map
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
-      'color': color,
       'imageUrl': imageUrl,
-      'createdAt': createdAt,
+      'createdAt':createdAt,
     };
   }
 
-  // Factory constructor to create a Person instance from a JSON map
-  factory Person.fromJson(Map<String, dynamic> json) {
-    if(json['createdAt'].runtimeType == int ){
-      return Person(
+  // Create a User object from a map
+  factory MyUser.fromJson(Map<String, dynamic> json) {
+    if(json['createdAt'].runtimeType == int){
+      return MyUser(
+        id: json['id'] as String,
         name: json['name'] as String,
-        color: json['color'] ?? 'Em',
-        imageUrl: json['imageUrl'] as String,
-        createdAt: (json['createdAt']),
+        imageUrl: json['imageUrl'] as String?,
+        createdAt:json['createdAt'],
       );
-    }
-    else{
-      DateTime myDate =DateTime.parse(json['createdAt']);
-      int myMicroSecondDate = myDate.microsecondsSinceEpoch;
-
-      return Person(
+    }else{
+      DateTime myDate = DateTime.parse(json ['createdAt']) ;
+      int myMicrosecondsDate = myDate.microsecondsSinceEpoch ;
+      return MyUser(
+        id: json['id'] as String,
         name: json['name'] as String,
-        color: json['color'] ?? 'Em',
-        imageUrl: json['imageUrl'] as String,
-        createdAt: myMicroSecondDate,
+        imageUrl: json['imageUrl'] as String?,
+        createdAt:myMicrosecondsDate,
       );
     }
 

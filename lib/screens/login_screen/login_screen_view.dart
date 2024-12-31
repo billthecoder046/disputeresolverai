@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:disputeresolverai/screens/commonWidgets/buttons.dart';
 import 'package:disputeresolverai/screens/commonWidgets/fieldWidgets.dart';
+import 'package:disputeresolverai/screens/home/home_view.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../utilities/global.dart';
 import 'login_screen_logic.dart';
 
 class Login_screenPage extends StatefulWidget {
@@ -21,9 +24,31 @@ class Login_screenPage extends StatefulWidget {
 class _Login_screenPageState extends State<Login_screenPage> {
   final logic = Get.put(Login_screenLogic());
 
+  Future<void> _initialize() async {
+    // Check if the user is signed in
+    User? user =  FirebaseAuth.instance.currentUser;
+
+
+    if (user != null) {
+      print("My user is not null");
+      Future.delayed(const Duration(seconds: 2));
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomePage()));
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initialize();
+  }
   @override
   Widget build(BuildContext context) {
     final screenType = ResponsiveBreakpoints.of(context);
+
+
     return Scaffold(
       body: Container(
         color: Colors.yellow,
