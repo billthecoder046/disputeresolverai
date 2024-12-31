@@ -2,6 +2,7 @@ import 'package:disputeresolverai/model/users.dart';
 import 'package:disputeresolverai/screens/commonWidgets/otherWidgets.dart';
 import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -73,7 +74,8 @@ class HomePage extends StatelessWidget {
                   }
                   String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
                   String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
-                  return ListTile(
+                  return FirebaseAuth.instance.currentUser!.uid == logic.myUsers[i].id ? const SizedBox():
+                    ListTile(
                     onTap: (){},
                     trailing: Text(
                       logic.myUsers[i].id,

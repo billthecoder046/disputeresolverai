@@ -20,12 +20,9 @@ class Login_screenLogic extends GetxController {
   TextEditingController passC = TextEditingController();
   TextEditingController userName = TextEditingController();
 
-
-
   //ifSignedInVariable
   RxBool isSignedIn = true.obs;
-  
-  
+
   //MyFunctions
   Future<void> createUserOnFirebase(String myProfileImageUrl) async{
     if(emailC.text.isEmpty || passC.text.isEmpty){
@@ -90,6 +87,7 @@ class Login_screenLogic extends GetxController {
     }
 
   }
+
   Future<void> signInUserOnApp() async{
     if(emailC.text.isEmpty || passC.text.isEmpty){
       Get.snackbar(

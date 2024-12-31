@@ -4,17 +4,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Show a loading indicator while waiting
+          return const CircularProgressIndicator();
         } else if (snapshot.hasData) {
-          return HomePage(); // User is logged in
+          return HomePage();
         } else {
-          return Login_screenPage(); // User is not logged in
+          return Login_screenPage();
         }
       },
     );
