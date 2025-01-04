@@ -7,6 +7,7 @@ class ChatController extends GetxController
 {
   final messageController = TextEditingController();
   final RxBool isSending = false.obs;
+  final focusNode = FocusNode();
 
   Future<void> sendMessage() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -19,6 +20,7 @@ class ChatController extends GetxController
           'timestamp': FieldValue.serverTimestamp(),
         });
         messageController.clear();
+        focusNode.requestFocus(); // TextField پر دوبارہ فوکس کریں
       }
     } catch (e) {
       print("Error sending message: $e");
@@ -26,6 +28,7 @@ class ChatController extends GetxController
       isSending.value = false;
     }
   }
+
 
   Future<void> deleteMessage(String messageId) async {
     try {
