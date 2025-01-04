@@ -12,6 +12,7 @@ void main() async {
   );
   runApp(MyRootWidget());
 }
+
 class MyRootWidget extends StatelessWidget {
   const MyRootWidget({super.key});
 
@@ -20,17 +21,17 @@ class MyRootWidget extends StatelessWidget {
     //I'have merged bilalwork into master branch
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
-       debugShowCheckedModeBanner: false,
-       builder: (context, child) => ResponsiveBreakpoints.builder(
-      child: child!,
-      breakpoints: [
-        const Breakpoint(start: 0, end: 550, name: MOBILE),
-        const Breakpoint(start: 551, end: 1000, name: TABLET),
-        const Breakpoint(start: 1001, end: 1920, name: DESKTOP),
-        const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
-      ],
-    ),
-      home:SignUpScreen(),
+      debugShowCheckedModeBanner: false,
+      builder: (context, child) => ResponsiveBreakpoints.builder(
+        child: child!,
+        breakpoints: [
+          const Breakpoint(start: 0, end: 550, name: MOBILE),
+          const Breakpoint(start: 551, end: 1000, name: TABLET),
+          const Breakpoint(start: 1001, end: 1920, name: DESKTOP),
+          const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+        ],
+      ),
+      home: SignUpScreen(),
     );
   }
 }
