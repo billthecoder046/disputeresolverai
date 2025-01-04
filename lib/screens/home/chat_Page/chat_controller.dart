@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatController extends GetxController
-{
+class ChatController extends GetxController {
   final messageController = TextEditingController();
   final RxBool isSending = false.obs;
   final focusNode = FocusNode();
@@ -17,7 +16,7 @@ class ChatController extends GetxController
         await FirebaseFirestore.instance.collection('messages').add({
           'text': messageController.text.trim(),
           'senderId': user.uid,
-          'timestamp': FieldValue.serverTimestamp(),
+          'timestamp': FieldValue.serverTimestamp(), // وقت اسٹور کریں
         });
         messageController.clear();
         focusNode.requestFocus(); // TextField پر دوبارہ فوکس کریں
@@ -28,7 +27,6 @@ class ChatController extends GetxController
       isSending.value = false;
     }
   }
-
 
   Future<void> deleteMessage(String messageId) async {
     try {

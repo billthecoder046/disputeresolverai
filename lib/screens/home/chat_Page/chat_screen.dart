@@ -73,41 +73,34 @@ class ChatScreen extends StatelessWidget {
                   if (snapshot.hasError) {
                     return Center(child: Text('Error loading messages'));
                   }
-                  return ListView.builder(
+                  return  ListView.builder(
                     reverse: true,
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final doc = snapshot.data!.docs[index];
-                      final isMe = doc['senderId'] ==
-                          FirebaseAuth.instance.currentUser?.uid;
+                      final isMe = doc['senderId'] == FirebaseAuth.instance.currentUser?.uid;
+                      final timestamp = doc['timestamp'] as Timestamp?;
+                      final messageTime = timestamp != null
+                          ? timestamp.toDate()
+                          : DateTime.now(); // اگر timestamp null ہو تو current time دکھائیں
 
                       return Align(
-                        alignment:
-                        isMe ? Alignment.centerRight : Alignment.centerLeft,
+                        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                         child: GestureDetector(
-                          onLongPress: isMe
-                              ? () => chatController.deleteMessage(doc.id)
-                              : null, // Allow deletion only for sender
+                          onLongPress: isMe ? () => chatController.deleteMessage(doc.id) : null,
                           child: Container(
                             margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 16),
+                            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                             decoration: BoxDecoration(
                               gradient: isMe
-                                  ? LinearGradient(
-                                  colors: [Colors.teal, Colors.tealAccent])
-                                  : LinearGradient(
-                                  colors: [Colors.grey[300]!, Colors.white]),
+                                  ? LinearGradient(colors: [Colors.teal, Colors.tealAccent])
+                                  : LinearGradient(colors: [Colors.grey[300]!, Colors.white]),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(16),
                                 topRight: Radius.circular(16),
-                                bottomLeft: isMe
-                                    ? Radius.circular(16)
-                                    : Radius.zero,
-                                bottomRight: isMe
-                                    ? Radius.zero
-                                    : Radius.circular(16),
+                                bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
+                                bottomRight: isMe ? Radius.zero : Radius.circular(16),
                               ),
                               boxShadow: [
                                 BoxShadow(
@@ -127,14 +120,14 @@ class ChatScreen extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                if (isMe)
-                                  Text(
-                                    'Long press to delete',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                    ),
+                                SizedBox(height: 5),
+                                Text(
+                                  '${messageTime.day}/${messageTime.month}/${messageTime.year} ${messageTime.hour}:${messageTime.minute}',
+                                  style: TextStyle(
+                                    color: isMe ? Colors.white70 : Colors.black54,
+                                    fontSize: 12,
                                   ),
+                                ),
                               ],
                             ),
                           ),
@@ -142,6 +135,7 @@ class ChatScreen extends StatelessWidget {
                       );
                     },
                   );
+
                 },
               ),
             ),
