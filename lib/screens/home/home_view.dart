@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/users.dart';
-import 'chat_screen.dart';
+import 'chat_Page/chat_screen.dart';
 import 'home_logic.dart';
 
 class Home_screenPage extends StatelessWidget {
