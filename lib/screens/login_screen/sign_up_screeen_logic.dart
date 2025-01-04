@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../model/users.dart';
 import '../home/home_view.dart';
+
 
 class SignUp_screeenLogic extends GetxController {
   TextEditingController userName = TextEditingController();
@@ -37,16 +39,16 @@ class SignUp_screeenLogic extends GetxController {
         if (myUser != null) {
           String name = userName.text;
           // Create a new Person instance with the current date and time
-          Person person = Person(
+          MyUser person = MyUser(
             name: name,
             imageUrl: myImgUrl,
-            createdAt: DateTime.now().microsecondsSinceEpoch,
+            createdAt: DateTime.now().microsecondsSinceEpoch, id: '',
           );
           // Save the person object to Firestore
           FirebaseFirestore.instance.collection("Persons").doc(name).set(
                 person.toJson(),
               );
-          Get.to(() => Home_screenPage());
+          Get.to(() => HomePage());
         }
       } catch (e) {
         print("apna error set karo $e");

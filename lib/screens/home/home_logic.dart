@@ -9,19 +9,27 @@ class HomeLogic extends GetxController {
   //Convert each document of user into MyUser Object
   //Save each user into the list of myUsers list
   //Then simply use this myUsers list to show the users on HomePage
- Future<List<MyUser>> getUsersFromFirebase() async{
-        QuerySnapshot myAllDocuments = await FirebaseFirestore.instance.collection("Users").get();
-        for(var element in myAllDocuments.docs){
-          print("***************");
-          print(element.data());
-          MyUser myUser = MyUser.fromJson(element.data() as Map<String,dynamic>);
-          print("***************");
-         myUsers.add(myUser);
-        }
-        print("My length ${myUsers.length}");
-        return myUsers ;
+  Future<List<MyUser>> getUsersFromFirebase() async {
+    // Clear the list before fetching new data
+    myUsers.clear();
 
+    QuerySnapshot myAllDocuments =
+    await FirebaseFirestore.instance.collection("Users").get();
+
+    for (var element in myAllDocuments.docs) {
+      print("***************");
+      print(element.data());
+      MyUser myUser = MyUser.fromJson(element.data() as Map<String, dynamic>);
+
+      // Check for duplicates
+      if (!myUsers.any((user) => user.id == myUser.id)) {
+        myUsers.add(myUser);
+      }
+    }
+    print("My length ${myUsers.length}");
+    return myUsers;
   }
+
 
   @override
   void onInit() async{
