@@ -1,4 +1,8 @@
 import 'dart:typed_data';
+import 'package:disputeresolverai/model/users.dart';
+import 'package:disputeresolverai/screens/home/home_view.dart';
+import 'package:disputeresolverai/utilities/global.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -15,35 +19,37 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen>
-    with SingleTickerProviderStateMixin {
+class _SignUpScreenState extends State<SignUpScreen> {
   final SignUp_screeenLogic logic = Get.put(SignUp_screeenLogic());
   Uint8List? _selectedImage;
   bool _isLoading = false;
 
-  late AnimationController _animationController;
-  late Animation<double> _buttonAnimation;
+  Future<void> _initialize() async {
+    // Check if the user is signed in
+    User? user =  FirebaseAuth.instance.currentUser;
+
+
+    if (user != null) {
+      print("My user is not null");
+      Future.delayed(const Duration(seconds: 2));
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Home_screenPage()));
+      });
+    }
+  }
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    _buttonAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _initialize();
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Sign Up'),
         backgroundColor: Colors.deepPurpleAccent,
@@ -61,6 +67,12 @@ class _SignUpScreenState extends State<SignUpScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Container(
+                    height: 200,
+                    width: 200,
+                    child: Image.asset('assets/images/pngegg (1).png'),
+                  ),
+                  const Divider(color: Colors.deepPurpleAccent),
                   InkWell(
                     onTap: () async {
                       _selectedImage = await ImagePickerWeb.getImageAsBytes();
@@ -131,44 +143,55 @@ class _SignUpScreenState extends State<SignUpScreen>
                     onTap: _isLoading
                         ? null
                         : () async {
-                      _animationController.forward().whenComplete(() {
-                        _animationController.reset();
-                      });
+                            if (_selectedImage == null) {
+                              Get.snackbar(
+                                'Error',
+                                'Please upload a profile picture before signing up.',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.redAccent,
+                                colorText: Colors.white,
+                              );
+                              return;
+                            }
 
-                      setState(() => _isLoading = true);
-                      String username = logic.userName.text;
-                      String? imageUrl =
-                      await _uploadImage(username, _selectedImage!);
+                            setState(() => _isLoading = true);
+                            String username = logic.userName.text;
+                            String? imageUrl =
+                                await _uploadImage(username, _selectedImage!);
 
-                      if (imageUrl != null) {
-                        await logic.createUserOnfirebase(imageUrl);
-                      }
+                            if (imageUrl != null) {
+                              await logic.createUserOnFirebase(imageUrl);
+                            }
 
-                      setState(() => _isLoading = false);
-                    },
-                    child: ScaleTransition(
-                      scale: _buttonAnimation,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          backgroundColor: Colors.deepPurpleAccent,
+                            setState(() => _isLoading = false);
+                          },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.teal, Colors.tealAccent],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
                         ),
-                        child: _isLoading
-                            ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white),
-                        )
-                            : const Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
-                        onPressed: null,
                       ),
                     ),
                   ),
@@ -194,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen>
   Future<String?> _uploadImage(String folderPath, Uint8List image) async {
     const String filename = 'profile.jpg';
     final Reference ref =
-    FirebaseStorage.instance.ref().child(folderPath).child(filename);
+        FirebaseStorage.instance.ref().child(folderPath).child(filename);
 
     try {
       await ref.putData(image);
@@ -207,7 +230,6 @@ class _SignUpScreenState extends State<SignUpScreen>
   }
 
   void _navigateToLogin() {
-    Get.to(() => Login_screenPage()); // Navigate to the Login screen.
+    Get.to(() => Login_screenPage());
   }
 }
-

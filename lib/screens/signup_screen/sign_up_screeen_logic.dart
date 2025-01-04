@@ -13,46 +13,52 @@ class SignUp_screeenLogic extends GetxController {
   Future<bool> userNameAvailable(String username) async {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Persons')
-        .where('name', isEqualTo: username).get();
-    List<DocumentSnapshot> saim= querySnapshot.docs;
-    if(saim.isEmpty){
+        .where('name', isEqualTo: username)
+        .get();
+    List<DocumentSnapshot> saim = querySnapshot.docs;
+    if (saim.isEmpty) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
 
-  Future<void> createUserOnfirebase(String myImgUrl) async {
+  Future<void> createUserOnFirebase(String myImgUrl) async {
     if (userName.text.isEmpty || emailC.text.isEmpty || passC.text.isEmpty) {
-      Get.snackbar('Error', 'teno khali ha');
+      Get.snackbar('Error', 'All fields are required!');
     } else {
       try {
-        bool isAvailable =await userNameAvailable(userName.text);
-        if(isAvailable ==true){
-          Get.snackbar('Error', 'User is already exist');
-        }
-        UserCredential myUser = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: emailC.text, password: passC.text);
-        if (myUser != null) {
-          String name = userName.text;
-          // Create a new Person instance with the current date and time
-          Person person = Person(
-            name: name,
-            imageUrl: myImgUrl,
-            createdAt: DateTime.now().microsecondsSinceEpoch,
-          );
-          // Save the person object to Firestore
-          FirebaseFirestore.instance.collection("Persons").doc(name).set(
-                person.toJson(),
-              );
-          Get.to(() => Home_screenPage());
+        bool isAvailable = await userNameAvailable(userName.text);
+        if (isAvailable == true) {
+          Get.snackbar('Error', 'User already exists');
+        } else {
+          UserCredential myUser = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+              email: emailC.text, password: passC.text);
+          if (myUser.user != null) {
+            String name = userName.text;
+            String id = myUser.user!.uid; // Set id as the Firebase user's UID
+
+            // Create a new Person instance with the current date and time
+            Person person = Person(
+              id: id, // Pass the id
+              name: name,
+              imageUrl: myImgUrl,
+              createdAt: DateTime.now().microsecondsSinceEpoch,
+            );
+
+            // Save the person object to Firestore
+            FirebaseFirestore.instance.collection("Persons").doc(id).set(
+              person.toJson(),
+            );
+
+            Get.to(() => Home_screenPage());
+          }
         }
       } catch (e) {
-        print("apna error set karo $e");
+        print("Error occurred: $e");
+        Get.snackbar('Error', e.toString());
       }
     }
   }
-
-
 }
