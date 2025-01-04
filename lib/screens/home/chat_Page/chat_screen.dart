@@ -161,8 +161,9 @@ class ChatScreen extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
+                  child:TextField(
                     controller: chatController.messageController,
+                    focusNode: chatController.focusNode, // فوکس نوڈ شامل کریں
                     style: TextStyle(fontSize: 16),
                     decoration: InputDecoration(
                       hintText: 'Type your message...',
@@ -175,10 +176,9 @@ class ChatScreen extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    autofocus: true, // Automatically focus on the text field
-                    onSubmitted: (_) =>
-                        chatController.sendMessage(), // Trigger send on Enter
+                    onSubmitted: (_) => chatController.sendMessage(), // Trigger send on Enter
                   ),
+
                 ),
                 SizedBox(width: 8),
                 Obx(
