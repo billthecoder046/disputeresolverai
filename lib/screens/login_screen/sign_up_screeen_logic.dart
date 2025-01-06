@@ -32,11 +32,10 @@ class SignUp_screeenLogic extends GetxController {
       try {
         bool isAvailable =await userNameAvailable(userName.text);
         if(isAvailable ==true){
-          Get.snackbar('Error', 'User is already exist');
+          Get.snackbar(
+              'Error', 'User is already exist');
         }
-        UserCredential myUser = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: emailC.text, password: passC.text);
+        UserCredential myUser = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailC.text, password: passC.text);
         if (myUser != null) {
           String name = userName.text;
           // Create a new Person instance with the current date and time
