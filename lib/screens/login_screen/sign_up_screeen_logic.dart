@@ -6,6 +6,7 @@ import '../../model/users.dart';
 import '../home/home_view.dart';
 
 class SignUp_screeenLogic extends GetxController {
+
   TextEditingController userName = TextEditingController();
   TextEditingController passC = TextEditingController();
   TextEditingController emailC = TextEditingController();
@@ -23,8 +24,10 @@ class SignUp_screeenLogic extends GetxController {
   }
 
   Future<void> createUserOnfirebase(String myImgUrl) async {
+
     if (userName.text.isEmpty || emailC.text.isEmpty || passC.text.isEmpty) {
-      Get.snackbar('Error', 'teno khali ha');
+      Get.snackbar(
+          'Error', 'Error');
     } else {
       try {
         bool isAvailable =await userNameAvailable(userName.text);

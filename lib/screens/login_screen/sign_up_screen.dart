@@ -8,7 +8,7 @@ import 'package:image_picker_web/image_picker_web.dart';
 import 'sign_up_screeen_logic.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -60,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  InkWell(
+                  GestureDetector(
                     onTap: () async {
                       _selectedImage = await ImagePickerWeb.getImageAsBytes();
                       setState(() {});
@@ -155,19 +155,19 @@ class _SignUpScreenState extends State<SignUpScreen>
                           ),
                           backgroundColor: Colors.deepPurpleAccent,
                         ),
+                        onPressed: null,
                         child: _isLoading
                             ? const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white),
-                        )
+                              Colors.red),)
                             : const Text(
                           'Sign Up',
                           style: TextStyle(
+                            color: Colors.blue,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: null,
                       ),
                     ),
                   ),
