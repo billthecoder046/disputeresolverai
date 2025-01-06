@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../commonWidgets/otherWidgets.dart';
 import '../login_screen/login_screen_logic.dart';
-import 'chat_screen/view.dart';
 import 'home_logic.dart';
 
 class HomePage extends StatelessWidget {
@@ -85,7 +84,7 @@ class HomePage extends StatelessWidget {
 
                       // Navigate to ChatScreen with chatId and selectedUser data
                       Get.to(
-                            () => ChatScreen(),
+                            () => HomePage(),
                         arguments: {
                           "selectedUser": selectedUser,
                           "chatId": chatId,
