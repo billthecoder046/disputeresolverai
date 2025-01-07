@@ -1,20 +1,23 @@
-import 'package:disputeresolverai/screens/home/home_view.dart';
-import 'package:disputeresolverai/screens/login_screen/login_screen_view.dart';
+import 'package:disputeresolverai/screens/login_screen/sign_up_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/home/home_view.dart';
+
 class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+// ok
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Show a loading indicator while waiting
+          return const CircularProgressIndicator();
         } else if (snapshot.hasData) {
-          return HomePage(); // User is logged in
+          return Home_screenPage();
         } else {
-          return Login_screenPage(); // User is not logged in
+          return const SignUpScreen();
         }
       },
     );
