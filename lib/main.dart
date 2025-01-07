@@ -1,4 +1,4 @@
-import 'package:disputeresolverai/screens/login_screen/sign_up_screen.dart';
+import 'package:disputeresolverai/screens/signup_screen/sign_up_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
