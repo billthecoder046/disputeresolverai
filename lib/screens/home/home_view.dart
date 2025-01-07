@@ -2,6 +2,7 @@ import 'package:disputeresolverai/model/users.dart';
 import 'package:disputeresolverai/screens/commonWidgets/otherWidgets.dart';
 import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -73,8 +74,17 @@ class HomePage extends StatelessWidget {
                   }
                   String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
                   String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
-                  return ListTile(
-                    onTap: (){},
+
+                  // bool c = a==b;
+                  bool isAlreadySignedIn =  logic.myUsers[i].id ==  FirebaseAuth.instance.currentUser!.uid;
+                  //Remove duplicate values from list
+                  logic.myUsers.toSet().toList();
+
+                  return isAlreadySignedIn == true? Container(): ListTile(
+                    onTap: (){
+                      logic.createChatRoom(logic.myUsers[i].id);
+
+                    },
                     trailing: Text(
                       logic.myUsers[i].id,
                       style: const TextStyle(
