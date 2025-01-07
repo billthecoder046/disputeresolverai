@@ -1,102 +1,128 @@
-import 'dart:js_interop';
-
+import 'package:disputeresolverai/model/users.dart';
+import 'package:disputeresolverai/screens/commonWidgets/otherWidgets.dart';
+import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
+import 'package:disputeresolverai/utilities/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
-import '../../model/users.dart';
 import 'home_logic.dart';
 
-class Home_screenPage extends StatelessWidget {
-  Home_screenPage({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  final logic = Get.put(HomeLogic());
 
-  final Details_screenLogic logic = Get.put(Details_screenLogic());
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: showUsers(context));
-  }
+    var size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title:  Text("My Home Screen".tr),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                var result = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return IsSureAlertBox(
+                          title: "Signing Out",
+                          content: "Are you sure to sign out?".tr);
+                    });
 
-  showUsers(context) {
-    return FutureBuilder(
-        future: logic.getUsersOnFirebase(),
-        builder: (context, AsyncSnapshot<List<Person>> snapshot) {
-          return Container(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: logic.myAllStudets.length,
-              itemBuilder: (context, i) {
-                DateTime dateTime;
-                if (logic.myAllStudets[i].createdAt.runtimeType == int) {
-                  dateTime = DateTime.fromMicrosecondsSinceEpoch(logic.myAllStudets[i].createdAt);
-                } else {
-                  dateTime = DateTime.parse(logic.myAllStudets[i].createdAt.toString());
+                if (result == true) {
+                  var myCo = Get.find<Login_screenLogic>();
+                  await myCo.logOut();
+                  myCo.isSignedIn.value = true;
+                  if (kDebugMode) {
+                    print("Signed Out successfully");
+                  }
+                  Get.snackbar(
+                      MyStrings.success, MyStrings.signedOutSuccessfully);
                 }
-                DateTime adjustedDateTime = dateTime.subtract(Duration(days: 20));
-                String papuDateAndTime =
-                DateFormat.yMd().add_jm().format(adjustedDateTime);
-                return Column(
-                  children: [
-                    Card(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      elevation: 20,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                // else{
+                //   print("Signed Out successfully");
+                //   Get.snackbar(MyStrings.success, MyStrings.signedOutSuccessfully);
+                // }
+              },
+              icon: const Icon(Icons.logout))
+        ],
+      ),
+      body: FutureBuilder(
+        future: logic.getUsersFromFirebase(),
+        builder: (context, AsyncSnapshot<List<MyUser>> sanaShot) {
+          if (sanaShot.hasData) {
+            return Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.all(12),
+              height: size.height * 0.8,
+              width: size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.shade200,
+              ),
+              child: ListView.builder(
+                itemCount: logic.myUsers.length,
+                itemBuilder: (context, i) {
+                  DateTime dateTime ;
+                  if(logic.myUsers[i].createdAt.runtimeType == int){
+                    dateTime  = DateTime.fromMicrosecondsSinceEpoch(logic.myUsers[i].createdAt!);
+                  }else{
+                    dateTime  = DateTime.parse(logic.myUsers[i].createdAt.toString());
+                  }
+                  String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
+                  String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
+
+                  // bool c = a==b;
+                  bool isAlreadySignedIn =  logic.myUsers[i].id ==  FirebaseAuth.instance.currentUser!.uid;
+                  //Remove duplicate values from list
+                  logic.myUsers.toSet().toList();
+
+                  return isAlreadySignedIn == true? Container(): ListTile(
+                    onTap: (){
+                      logic.createChatRoom(logic.myUsers[i].id);
+
+                    },
+                    trailing: Text(
+                      logic.myUsers[i].id,
+                      style: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
+                    ),
+
+                    title: Text(
+                      logic.myUsers[i].name.toUpperCase(),
+                      style: const TextStyle(
+                          color: Colors.indigo,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text("$papuDate $formattedDate"),
+                    leading: Container(
+                      height: 80,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.red
                       ),
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              blurRadius: 10,
-                              offset: Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            logic.myAllStudets[i].name,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.teal.shade900,
-                            ),
-                          ),
-                          leading: GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    child: Container(
-                                      padding: EdgeInsets.all(10),
-                                      child: Image.network(
-                                        logic.myAllStudets[i].imageUrl,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Image.network(
-                              logic.myAllStudets[i].imageUrl,
-                              height: 120,
-                              width: 120,
-                            ),
-                          ),
-                          subtitle: Text('$papuDateAndTime'),
+                      child: ClipOval(
+                        child: Image.network(
+                          logic.myUsers[i].imageUrl ?? "NO Image ",
                         ),
                       ),
                     ),
-                  ],
-                );
-              },
-            ),
-          );
-        });
+                  );
+                },
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
   }
 }
+
+
+///
