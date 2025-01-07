@@ -69,3 +69,4 @@ class HomeLogic extends GetxController {
     });
   }
 }
+// mlik
