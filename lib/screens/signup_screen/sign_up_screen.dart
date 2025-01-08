@@ -45,7 +45,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _initialize();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
