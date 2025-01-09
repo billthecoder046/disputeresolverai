@@ -1,42 +1,42 @@
-
-class MyUser {
-  String id;
+class Person {
+  String id; // New field for ID
   String name;
-  int? createdAt;
-  String? imageUrl;
+  String imageUrl;
+  int createdAt;
 
-  MyUser({required this.id, required this.name, this.imageUrl,this.createdAt, });
+  Person({
+    required this.id, // Include id in the constructor
+    required this.name,
+    required this.imageUrl,
+    required this.createdAt,
+  });
 
-  // Convert a User object into a map
+  // Method to convert a Person instance to a JSON map
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id, // Add id to the JSON map
       'name': name,
       'imageUrl': imageUrl,
-      'createdAt':createdAt,
+      'createdAt': createdAt,
     };
   }
 
-  // Create a User object from a map
-  factory MyUser.fromJson(Map<String, dynamic> json) {
-    if(json['createdAt'].runtimeType == int){
-      return MyUser(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        imageUrl: json['imageUrl'] as String?,
-        createdAt:json['createdAt'],
-      );
-    }else{
-      DateTime myDate = DateTime.parse(json ['createdAt']) ;
-      int myMicrosecondsDate = myDate.microsecondsSinceEpoch ;
-      return MyUser(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        imageUrl: json['imageUrl'] as String?,
-        createdAt:myMicrosecondsDate,
-      );
+  // Factory constructor to create a Person instance from a JSON map
+  factory Person.fromJson(Map<String, dynamic> json) {
+    int createdAtTimestamp;
+
+    if (json['createdAt'].runtimeType == int) {
+      createdAtTimestamp = json['createdAt'];
+    } else {
+      DateTime myDate = DateTime.parse(json['createdAt']);
+      createdAtTimestamp = myDate.microsecondsSinceEpoch;
     }
 
-
+    return Person(
+      id: json['id'] as String, // Parse id from JSON
+      name: json['name'] as String,
+      imageUrl: json['imageUrl'] as String,
+      createdAt: createdAtTimestamp,
+    );
   }
 }

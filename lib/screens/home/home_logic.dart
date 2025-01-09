@@ -1,43 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:disputeresolverai/model/users.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-class HomeLogic extends GetxController {
+import '../../model/users.dart';
+import 'chat_Page/chat_screen.dart';
 
-  List<MyUser> myUsers = [];
-  //Fetch all user documents from firebase
-  //Convert each document of user into MyUser Object
-  //Save each user into the list of myUsers list
-  //Then simply use this myUsers list to show the users on HomePage
-  Future<List<MyUser>> getUsersFromFirebase() async {
-    // Clear the list before fetching new data
-    myUsers.clear();
-
-    QuerySnapshot myAllDocuments =
-    await FirebaseFirestore.instance.collection("Users").get();
-
-    for (var element in myAllDocuments.docs) {
-      print("***************");
-      print(element.data());
-      MyUser myUser = MyUser.fromJson(element.data() as Map<String, dynamic>);
-
-      // Check for duplicates
-      if (!  myUsers.any((user) => user.id == myUser.id)) {
-        myUsers.add(myUser);
-      }
+class Details_screenLogic extends GetxController {
+  List<Person> myAllStudets = [];
+  var myFbIns = FirebaseAuth.instance;
+  var myFbFs = FirebaseFirestore.instance;
+  Future<List<Person>> getUsersOnFirebase() async {
+    QuerySnapshot myalldocs = await FirebaseFirestore.instance.collection('Persons').get();
+    for (var elements in myalldocs.docs) {
+      Person myStudent = Person.fromJson(elements.data() as Map<String, dynamic>);
+      myAllStudets.add(myStudent);
     }
-    print("My length ${myUsers.length}");
-    return myUsers;
+    return myAllStudets;
   }
+  Future<void>createChatRoom(String otherUserId) async{
+
+    String chatRoomId = "${myFbIns.currentUser!.uid}-$otherUserId";
+    print(chatRoomId);
+    var myChatRoomDoc = await myFbFs.collection('Chating').doc(chatRoomId).get();
+
+    if(myChatRoomDoc.exists){
+      //Navigate chat Screen
+      Get.to(ChatScreen());
+    }else{
+      await myFbFs.collection('Chating').doc(chatRoomId).set({
+        'chatRoomId':chatRoomId,
+        'timeStamp':DateTime.now()
+      }).then((value){
+        print("Collection was created");
+      });
+      //Navigate
+      Get.to(ChatScreen());
+    }
 
 
-  @override
-  void onInit() async{
-    // TODO: implement onInit
-    super.onInit();
-    myUsers.forEach((e){
-      print(e.name);
-    });
+
   }
-
 }
