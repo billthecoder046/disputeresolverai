@@ -9,7 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 
-import '../../login_screen/view.dart';
+import '../../login_screen/login_screen_view.dart';
 import 'sign_up_screeen_logic.dart';
 
 class SignUpScreen extends StatefulWidget {

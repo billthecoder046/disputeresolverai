@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
-import 'logic.dart';
+import 'login_screen_logic.dart';
 
 class Login_screenPage extends StatelessWidget {
   Login_screenPage({Key? key}) : super(key: key);
