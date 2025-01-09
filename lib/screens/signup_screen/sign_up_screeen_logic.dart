@@ -25,12 +25,12 @@ class SignUp_screeenLogic extends GetxController {
 
   Future<void> createUserOnFirebase(String myImgUrl) async {
     if (userName.text.isEmpty || emailC.text.isEmpty || passC.text.isEmpty) {
-      Get.snackbar('Error', 'All fields are required!');
+      Get.snackbar('Error', 'All fields are required!',backgroundColor: Colors.red,colorText: Colors.white);
     } else {
       try {
         bool isAvailable = await userNameAvailable(userName.text);
         if (isAvailable == true) {
-          Get.snackbar('Error', 'User already exists');
+          Get.snackbar('Error', 'User already exists',icon: Icon(Icons.person,color: Colors.black,));
         } else {
           UserCredential myUser = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
