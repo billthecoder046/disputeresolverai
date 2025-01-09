@@ -22,7 +22,7 @@ class HomeLogic extends GetxController {
       MyUser myUser = MyUser.fromJson(element.data() as Map<String, dynamic>);
 
       // Check for duplicates
-      if (!myUsers.any((user) => user.id == myUser.id)) {
+      if (!  myUsers.any((user) => user.id == myUser.id)) {
         myUsers.add(myUser);
       }
     }
