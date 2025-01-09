@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
   final logic = Get.put(HomeLogic());
 
   HomePage({super.key});
-
+//
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                           title: "Signing Out",
                           content: "Are you sure to sign out?".tr);
                     });
-
+                //check duplicate users
                 if (result == true) {
                   var myCo = Get.find<Login_screenLogic>();
                   await myCo.logOut();
