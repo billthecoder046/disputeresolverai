@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-
-import '../../login_screen/login_screen_view.dart';
+import '../login_screen/login_screen_view.dart';
 import 'sign_up_screeen_logic.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -33,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       print("My user is not null");
       Future.delayed(const Duration(seconds: 2));
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Home_screenPage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreenPage()));
       });
     }
   }

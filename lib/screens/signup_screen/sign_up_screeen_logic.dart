@@ -48,11 +48,11 @@ class SignUp_screeenLogic extends GetxController {
             );
 
             // Save the person object to Firestore
-            FirebaseFirestore.instance.collection("Persons").doc(id).set(
+            FirebaseFirestore.instance.collection("Users").doc(id).set(
               person.toJson(),
             );
 
-            Get.to(() => Home_screenPage());
+            Get.to(() => HomeScreenPage());
           }
         }
       } catch (e) {

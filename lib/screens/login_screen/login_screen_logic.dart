@@ -23,7 +23,7 @@ class Login_screenLogic extends GetxController {
       Get.snackbar('Error', 'Some Error occurred');
     }
     isLoading.value = true; // Start loading
-    await Future.delayed(Duration(seconds: 2)); // Simulate a login process
+    await Future.delayed(const Duration(seconds: 2)); // Simulate a login process
     isLoading.value = false; // Stop loading
 
     // Add your navigation or success logic here
@@ -31,7 +31,7 @@ class Login_screenLogic extends GetxController {
     UserCredential userCredential =await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailCon.text, password: passCon.text);
     if(userCredential != null){
-      Get.to(()=>Home_screenPage());
+      Get.to(()=>HomeScreenPage());
     }
   }
 }

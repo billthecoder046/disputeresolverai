@@ -19,7 +19,7 @@ class Login_screenPage extends StatelessWidget {
       ),
       body: Obx(() {
         if (logic.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         return Padding(

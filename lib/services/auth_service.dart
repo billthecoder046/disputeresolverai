@@ -1,7 +1,8 @@
 import 'package:disputeresolverai/screens/home/home_view.dart';
-import 'package:disputeresolverai/screens/login_screen/login_screen_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../screens/login_screen/login_screen_view.dart';
 
 class AuthWrapper extends StatelessWidget {
   @override
@@ -12,7 +13,7 @@ class AuthWrapper extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator(); // Show a loading indicator while waiting
         } else if (snapshot.hasData) {
-          return HomePage(); // User is logged in
+          return HomeScreenPage(); // User is logged in
         } else {
           return Login_screenPage(); // User is not logged in
         }

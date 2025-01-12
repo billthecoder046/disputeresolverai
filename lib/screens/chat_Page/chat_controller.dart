@@ -8,7 +8,7 @@ class ChatController extends GetxController {
   final RxBool isSending = false.obs;
   final focusNode = FocusNode();
 
-  Future<void> sendMessage() async {
+  Future<void> sendMessage(String chatRoomId) async {
     final user = FirebaseAuth.instance.currentUser;
     isSending.value = true;
     try {
