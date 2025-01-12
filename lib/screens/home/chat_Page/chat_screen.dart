@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'chat_controller.dart';
+
 class ChatScreen extends StatelessWidget {
   final ChatController chatController = Get.put(ChatController());
 
@@ -14,7 +16,11 @@ class ChatScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blueGrey.shade900, Colors.blueGrey.shade700],
+            colors: [
+              Color(0xFF1E3C72), // Professional dark blue
+              Color(0xFF2A5298),
+              Color(0xFF3B8D99), // Teal accent
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -52,101 +58,124 @@ class ChatScreen extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(25),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('messages')
-                      .orderBy('timestamp', descending: true)
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error loading messages'));
-                    }
-                    return ListView.builder(
-                      reverse: true,
-                      padding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        final doc = snapshot.data!.docs[index];
-                        final isMe = doc['senderId'] ==
-                            FirebaseAuth.instance.currentUser?.uid;
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('messages')
+                    .orderBy('timestamp', descending: true)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error loading messages'));
+                  }
+                  return Column(
+                    children: [
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('typingStatus')
+                            .snapshots(),
+                        builder: (context, AsyncSnapshot<QuerySnapshot> typingSnapshot) {
+                          if (typingSnapshot.hasData) {
+                            final typingUsers = typingSnapshot.data!.docs
+                                .where((doc) => doc['isTyping'] == true && doc.id != FirebaseAuth.instance.currentUser?.uid)
+                                .toList();
 
-                        return Align(
-                          alignment:
-                          isMe ? Alignment.centerRight : Alignment.centerLeft,
-                          child: GestureDetector(
-                            onLongPress: isMe
-                                ? () => chatController.deleteMessage(doc.id)
-                                : null,
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: 8),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 16),
-                              decoration: BoxDecoration(
-                                gradient: isMe
-                                    ? LinearGradient(colors: [
-                                  Colors.blue.shade400,
-                                  Colors.blue.shade300
-                                ])
-                                    : LinearGradient(colors: [
-                                  Colors.grey.shade300,
-                                  Colors.grey.shade100
-                                ]),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                  bottomLeft: isMe
-                                      ? Radius.circular(16)
-                                      : Radius.zero,
-                                  bottomRight: isMe
-                                      ? Radius.zero
-                                      : Radius.circular(16),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4,
-                                    offset: Offset(2, 2),
+                            if (typingUsers.isNotEmpty) {
+                              return Text(
+                                "Someone is typing...",
+                                style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+                              );
+                            }
+                          }
+                          return SizedBox.shrink();
+                        },
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          reverse: true,
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            final doc = snapshot.data!.docs[index];
+                            final isMe = doc['senderId'] == FirebaseAuth.instance.currentUser?.uid;
+                            final timestamp = doc['timestamp'] != null
+                                ? (doc['timestamp'] as Timestamp).toDate()
+                                : DateTime.now();
+
+                            return Align(
+                              alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment:
+                                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onLongPress: isMe ? () => chatController.deleteMessage(doc.id) : null,
+                                    child: AnimatedOpacity(
+                                      opacity: 1.0,
+                                      duration: Duration(milliseconds: 500),
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(vertical: 8),
+                                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                        decoration: BoxDecoration(
+                                          gradient: isMe
+                                              ? LinearGradient(colors: [Color(0xFF56CCF2), Color(0xFF2F80ED)])
+                                              : LinearGradient(
+                                              colors: [Colors.grey.shade300, Colors.grey.shade100]),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(16),
+                                            bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
+                                            bottomRight: isMe ? Radius.zero : Radius.circular(16),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 4,
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Text(
+                                          doc['text'],
+                                          style: TextStyle(
+                                            color: isMe ? Colors.white : Colors.black87,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    '${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')} ${timestamp.hour >= 12 ? 'PM' : 'AM'}', // Format the time
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ],
                               ),
-                              child: Text(
-                                doc['text'],
-                                style: TextStyle(
-                                  color: isMe ? Colors.white : Colors.black87,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                            );
+                          },
+                        ),
+                      ),
+
+                    ],
+                  );
+                },
               ),
             ),
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.grey.shade200,
+                    Colors.grey.shade100,
+                  ],
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
@@ -164,23 +193,22 @@ class ChatScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText: 'Type your message...',
                         filled: true,
-                        fillColor: Colors.grey[200],
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
+                        fillColor: Colors.white,
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      onSubmitted: (_) =>
-                          chatController.sendMessage(), // Trigger send on Enter
+                      onSubmitted: (_) => chatController.sendMessage(),
                     ),
                   ),
                   SizedBox(width: 8),
                   Obx(
                         () => CircleAvatar(
                       radius: 24,
-                      backgroundColor: Colors.blue.shade600,
+                      backgroundColor: Color(0xFF1E88E5),
                       child: chatController.isSending.value
                           ? SizedBox(
                         height: 24,
@@ -206,47 +234,5 @@ class ChatScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ChatController extends GetxController {
-  final messageController = TextEditingController();
-  final RxBool isSending = false.obs;
-
-  Future<void> sendMessage() async {
-    final user = FirebaseAuth.instance.currentUser;
-    isSending.value = true;
-    try {
-      if (user != null && messageController.text.isNotEmpty) {
-        await FirebaseFirestore.instance.collection('messages').add({
-          'text': messageController.text.trim(),
-          'senderId': user.uid,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-        messageController.clear();
-      }
-    } catch (e) {
-      print("Error sending message: $e");
-    } finally {
-      isSending.value = false;
-    }
-  }
-
-  Future<void> deleteMessage(String messageId) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('messages')
-          .doc(messageId)
-          .delete();
-    } catch (e) {
-      print("Error deleting message: $e");
-      Get.snackbar('Error', 'Failed to delete message');
-    }
-  }
-
-  @override
-  void onClose() {
-    messageController.dispose();
-    super.onClose();
   }
 }

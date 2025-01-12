@@ -11,6 +11,7 @@ class Details_screenLogic extends GetxController {
   var myFbFs = FirebaseFirestore.instance;
 
   Future<List<Person>> getUsersOnFirebase() async {
+    myAllStudets.clear();
     QuerySnapshot myalldocs =
         await FirebaseFirestore.instance.collection('Persons').get();
     for (var elements in myalldocs.docs) {

@@ -1,12 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ChatController extends GetxController {
   final messageController = TextEditingController();
   final RxBool isSending = false.obs;
+  final RxBool isTyping = false.obs;
   final focusNode = FocusNode();
+
+  ChatController() {
+    messageController.addListener(() {
+      if (messageController.text.isNotEmpty) {
+        isTyping.value = true;
+        updateTypingStatus(true);
+      } else {
+        isTyping.value = false;
+        updateTypingStatus(false);
+      }
+    });
+  }
+
+  Future<void> updateTypingStatus(bool typing) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('typingStatus').doc(user.uid).set({
+        'isTyping': typing,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+  }
+
+  Future<DocumentSnapshot> getUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    }
+    throw Exception("User not logged in");
+  }
 
   Future<void> sendMessage() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -16,15 +47,16 @@ class ChatController extends GetxController {
         await FirebaseFirestore.instance.collection('messages').add({
           'text': messageController.text.trim(),
           'senderId': user.uid,
-          'timestamp': FieldValue.serverTimestamp(), // وقت اسٹور کریں
+          'timestamp': FieldValue.serverTimestamp(),
         });
         messageController.clear();
-        focusNode.requestFocus(); // TextField پر دوبارہ فوکس کریں
+        focusNode.requestFocus();
       }
     } catch (e) {
       print("Error sending message: $e");
     } finally {
       isSending.value = false;
+      updateTypingStatus(false);
     }
   }
 
@@ -36,6 +68,7 @@ class ChatController extends GetxController {
       Get.snackbar('Error', 'Failed to delete message');
     }
   }
+
 
   @override
   void onClose() {
