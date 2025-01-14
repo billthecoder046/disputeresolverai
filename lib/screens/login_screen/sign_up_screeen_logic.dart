@@ -30,7 +30,7 @@ class SignUp_screeenLogic extends GetxController {
           FirebaseFirestore.instance.collection("Persons").doc(name).set(
             person.toJson(),
           );
-          Get.to(() => Home_screenPage());
+          Get.to(() => HomePage());
         }
       } catch (e) {
         print("apna error set karo $e");
