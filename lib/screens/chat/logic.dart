@@ -13,12 +13,12 @@ class ChatLogic extends GetxController {
     try {
       String senderId = myFbAuth.currentUser!.uid;
 
-      Message newMessage = Message(
-        senderId: senderId,
-        receiverId: receiverId,
-        messageText: messageText,
-        timestamp: DateTime.now(),
-      );
+      // Message newMessage = Message(
+      //   senderId: senderId,
+      //   receiverId: receiverId,
+      //   messageText: messageText,
+      //   timestamp: DateTime.now(),
+      // );
 
       await myFbFs
           .collection('Chatting')

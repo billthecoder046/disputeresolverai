@@ -15,7 +15,14 @@ class HomeScreenPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Users"),
+        title:  Row(
+          children: [
+            const Text("Users"),
+            IconButton(onPressed: (){
+              logic.logout();
+            }, icon: const Icon(Icons.logout))
+          ],
+        ),
         centerTitle: true,
         backgroundColor: Colors.teal,
       ),
@@ -51,7 +58,7 @@ class HomeScreenPage extends StatelessWidget {
             DateTime dateTime;
             if (user.createdAt.runtimeType == int) {
               dateTime =
-                  DateTime.fromMicrosecondsSinceEpoch(user.createdAt * 1000);
+                  DateTime.fromMicrosecondsSinceEpoch(logic.myUsers[i].createdAt);
             } else {
               dateTime = DateTime.parse(user.createdAt.toString());
             }

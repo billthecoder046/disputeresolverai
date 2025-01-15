@@ -57,4 +57,7 @@ class DetailsScreenLogic extends GetxController {
       Get.snackbar("Error", "Failed to create chat room: $e");
     }
   }
+  logout()async{
+    await FirebaseAuth.instance.signOut();
+  }
 }
