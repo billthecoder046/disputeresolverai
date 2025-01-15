@@ -44,13 +44,27 @@ class ChatLogic extends GetxController {
           .orderBy('timestamp', descending: true)
           .snapshots()
           .map((snapshot) => snapshot.docs
-          .map((doc) => Message.fromJson(doc.data() as Map<String, dynamic>))
+          .map((doc) => Message.fromJson(doc.data() as Map<String, dynamic>, doc.id))
           .toList());
     } catch (e) {
       Get.snackbar('Error', 'Failed to retrieve messages: $e'); // Show error to the user
       return Stream.empty(); // Return an empty stream if an error occurs
     }
   }
+
+  Future<void> deleteMessage(String chatRoomId, String messageId) async {
+    try {
+      await myFbFs
+          .collection('Chatting')
+          .doc(chatRoomId)
+          .collection('Messages')
+          .doc(messageId)
+          .delete();
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete message: $e');
+    }
+  }
+
 
   void updateMessages(List<Message> newMessages) {
     messages.value = newMessages; // Update the observable list
