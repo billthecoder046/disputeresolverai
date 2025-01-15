@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class HomeLogic extends GetxController {
-  List<MyUser> myUsers = [];
+  List<Person> myPerson = [];
   int i = 0;
   var myFbIns = FirebaseAuth.instance;
   var myFbFs = FirebaseFirestore.instance;
@@ -14,25 +14,25 @@ class HomeLogic extends GetxController {
   //Convert each document of user into MyUser Object
   //Save each user into the list of myUsers list
   //Then simply use this myUsers list to show the users on HomePage
-  Future<List<MyUser>> getUsersFromFirebase() async {
+  Future<List<Person>> getUsersFromFirebase() async {
     try {
       QuerySnapshot myAllDocuments =
           await FirebaseFirestore.instance.collection("Users").get();
       for (var element in myAllDocuments.docs) {
         print("***************");
         print(element.data());
-        MyUser myUser = MyUser.fromJson(element.data() as Map<String, dynamic>);
+        Person myUser = Person.fromJson(element.data() as Map<String, dynamic>);
         print("***************");
-        myUsers.add(myUser);
+        myPerson.add(myUser);
       }
-      myUsers.toSet().toList();
-      print("My length ${myUsers.length}");
+      myPerson.toSet().toList();
+      print("My length ${myPerson.length}");
       i++;
-      return myUsers;
+      return myPerson;
     } catch (e) {
       print(e);
     }
-    return myUsers;
+    return myPerson;
   }
 
   //Creating Chat room
@@ -64,7 +64,7 @@ class HomeLogic extends GetxController {
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
-    myUsers.forEach((e) {
+    myPerson.forEach((e) {
       print(e.name);
     });
   }

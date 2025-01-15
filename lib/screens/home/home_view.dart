@@ -1,12 +1,12 @@
 import 'package:disputeresolverai/model/users.dart';
 import 'package:disputeresolverai/screens/commonWidgets/otherWidgets.dart';
-import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
 import 'package:disputeresolverai/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../login_screen/sign_up_screeen_logic.dart';
 import 'home_logic.dart';
 
 class HomePage extends StatelessWidget {
@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
       ),
       body: FutureBuilder(
         future: logic.getUsersFromFirebase(),
-        builder: (context, AsyncSnapshot<List<MyUser>> sanaShot) {
+        builder: (context, AsyncSnapshot<List<Person>> sanaShot) {
           if (sanaShot.hasData) {
             return Container(
               padding: const EdgeInsets.all(12),
@@ -64,35 +64,35 @@ class HomePage extends StatelessWidget {
                 color: Colors.grey.shade200,
               ),
               child: ListView.builder(
-                itemCount: logic.myUsers.length,
+                itemCount: logic.myPerson.length,
                 itemBuilder: (context, i) {
                   DateTime dateTime ;
-                  if(logic.myUsers[i].createdAt.runtimeType == int){
-                    dateTime  = DateTime.fromMicrosecondsSinceEpoch(logic.myUsers[i].createdAt!);
+                  if(logic.myPerson[i].createdAt.runtimeType == int){
+                    dateTime  = DateTime.fromMicrosecondsSinceEpoch(logic.myPerson[i].createdAt!);
                   }else{
-                    dateTime  = DateTime.parse(logic.myUsers[i].createdAt.toString());
+                    dateTime  = DateTime.parse(logic.myPerson[i].createdAt.toString());
                   }
                   String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
                   String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
 
                   // bool c = a==b;
-                  bool isAlreadySignedIn =  logic.myUsers[i].id ==  FirebaseAuth.instance.currentUser!.uid;
+                  bool isAlreadySignedIn =  logic.myPerson[i].id ==  FirebaseAuth.instance.currentUser!.uid;
                   //Remove duplicate values from list
-                  logic.myUsers.toSet().toList();
+                  logic.myPerson.toSet().toList();
 
                   return isAlreadySignedIn == true? Container(): ListTile(
                     onTap: (){
-                      logic.createChatRoom(logic.myUsers[i].id);
+                      logic.createChatRoom(logic.myPerson[i].id);
 
                     },
                     trailing: Text(
-                      logic.myUsers[i].id,
+                      logic.myPerson[i].id,
                       style: const TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
                     ),
 
                     title: Text(
-                      logic.myUsers[i].name.toUpperCase(),
+                      logic.myPerson[i].name.toUpperCase(),
                       style: const TextStyle(
                           color: Colors.indigo,
                           fontWeight: FontWeight.bold),
@@ -107,7 +107,7 @@ class HomePage extends StatelessWidget {
                       ),
                       child: ClipOval(
                         child: Image.network(
-                          logic.myUsers[i].imageUrl ?? "NO Image ",
+                          logic.myPerson[i].imageUrl ?? "NO Image ",
                         ),
                       ),
                     ),

@@ -1,59 +1,85 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:disputeresolverai/screens/home/home_view.dart';
+import 'package:disputeresolverai/screens/login_screen/sign_up_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../model/users.dart';
-import '../home/home_view.dart';
 
-class SignUp_screeenLogic extends GetxController {
 
-  TextEditingController userName = TextEditingController();
-  TextEditingController passC = TextEditingController();
+class Login_screenLogic extends GetxController {
+  //MyVariables
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   TextEditingController emailC = TextEditingController();
+  TextEditingController passC = TextEditingController();
+  TextEditingController userName = TextEditingController();
 
-  Future<bool> userNameAvailable(String username) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('Persons')
-        .where('name', isEqualTo: username).get();
-    List<DocumentSnapshot> saim= querySnapshot.docs;
-    if(saim.isEmpty){
-      return false;
-    }else{
-      return true;
-    }
-  }
+  //ifSignedInVariable
+  RxBool isSignedIn = true.obs;
 
-  Future<void> createUserOnfirebase(String myImgUrl) async {
 
-    if (userName.text.isEmpty || emailC.text.isEmpty || passC.text.isEmpty) {
+  //MyFunctions
+  Future<void> createUserOnFirebase(String imageUrl) async{
+    if(emailC.text.isEmpty || passC.text.isEmpty){
       Get.snackbar(
-          'Error', 'Error');
-    } else {
+        'Email or password is empty',
+        "Both are required",
+        colorText: Colors.white,
+        backgroundColor: Colors.lightBlue,
+        icon: const Icon(Icons.add_alert),
+      );
+    }else{
       try {
-        bool isAvailable =await userNameAvailable(userName.text);
-        if(isAvailable ==true){
-          Get.snackbar(
-              'Error', 'User is already exist');
-        }
-        UserCredential myUser = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailC.text, password: passC.text);
-        if (myUser != null) {
-          String name = userName.text;
-          // Create a new Person instance with the current date and time
-          Person person = Person(
-            name: name,
-            imageUrl: myImgUrl,
-            createdAt: DateTime.now().microsecondsSinceEpoch,
-          );
-          // Save the person object to Firestore
-          FirebaseFirestore.instance.collection("Persons").doc(name).set(
-                person.toJson(),
-              );
-          Get.to(() => Home_screenPage());
-        }
+        Get.to(()=> HomePage(), transition: Transition.leftToRight);
       } catch (e) {
-        print("apna error set karo $e");
+        print(e);
+        Get.snackbar(
+          'Some issue occurred',
+          e.toString(),
+          colorText: Colors.white,
+          backgroundColor: Colors.lightBlue,
+          icon: const Icon(Icons.add_alert),
+        );
+      } finally {
+        print("Thankyou for your time");
       }
     }
+
   }
+  Future<void> signInUserOnApp() async{
+    if(emailC.text.isEmpty || passC.text.isEmpty){
+      Get.snackbar(
+        'Email or password is empty',
+        "Both are required",
+        colorText: Colors.white,
+        backgroundColor: Colors.lightBlue,
+        icon: const Icon(Icons.add_alert),
+      );
+    }else{
+      try {
+        Get.to(()=> HomePage(), transition: Transition.leftToRight);
+      } catch (e) {
+        print(e);
+        Get.snackbar(
+          'Some issue occurred',
+          e.toString(),
+          colorText: Colors.white,
+          backgroundColor: Colors.lightBlue,
+          icon: const Icon(Icons.add_alert),
+        );
+      } finally {
+        print("Thankyou for your time");
+      }
+    }
+
+  }
+
+  //MyFunctions
+  Future<void> logOut() async{
+    await _firebaseAuth.signOut();
+    Get.offAll(const SignUpScreen());
+
+  }
+
 
 }

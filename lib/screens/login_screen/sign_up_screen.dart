@@ -16,7 +16,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen>
     with SingleTickerProviderStateMixin {
-  final SignUp_screeenLogic logic = Get.put(SignUp_screeenLogic());
+  final Login_screenLogic logic = Get.put(Login_screenLogic());
   Uint8List? _selectedImage;
   bool _isLoading = false;
 
@@ -140,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       await _uploadImage(username, _selectedImage!);
 
                       if (imageUrl != null) {
-                        await logic.createUserOnfirebase(imageUrl);
+                        await logic.createUserOnFirebase(imageUrl);
                       }
 
                       setState(() => _isLoading = false);

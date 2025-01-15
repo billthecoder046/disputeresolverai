@@ -4,12 +4,14 @@ class Person {
   String? color;
   String imageUrl;
   int createdAt;
+  String id ;
 
   Person({
     required this.name,
     this.color,
     required this.imageUrl,
     required this.createdAt,
+  required this.id,
   });
 
   // Method to convert a Person instance to a JSON map
@@ -19,6 +21,8 @@ class Person {
       'color': color,
       'imageUrl': imageUrl,
       'createdAt': createdAt,
+      'id': id,
+
     };
   }
 
@@ -30,6 +34,7 @@ class Person {
         color: json['color'] ?? 'Em',
         imageUrl: json['imageUrl'] as String,
         createdAt: (json['createdAt']),
+        id : json['id'] as String,
       );
     }
     else{
@@ -41,6 +46,7 @@ class Person {
         color: json['color'] ?? 'Em',
         imageUrl: json['imageUrl'] as String,
         createdAt: myMicroSecondDate,
+        id: json['id'] as String,
       );
     }
 
