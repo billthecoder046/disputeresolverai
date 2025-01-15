@@ -1,62 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../../model/message.dart';
 import 'logic.dart';
 
+class ChatScreen extends StatefulWidget {
+  final String chatRoomId;
+  final String receiverId;
+  final String receiverName;
 
-class ChatPage extends StatelessWidget {
-  final List<Map<String, dynamic>> messages = [
-    {'text': 'Hi there!', 'isMe': true},
-    {'text': 'Hello! How are you?', 'isMe': false},
-    {'text': 'I am good, thanks! And you?', 'isMe': true},
-  ];
+  ChatScreen({required this.chatRoomId, required this.receiverId, required this.receiverName, Key? key})
+      : super(key: key);
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final ChatLogic chatLogic = Get.put(ChatLogic());
+  final TextEditingController messageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Load initial messages when the widget is built
+    _loadMessages();
+  }
+
+  void _loadMessages() {
+    chatLogic.getMessages(widget.chatRoomId).listen((newMessages) {
+      chatLogic.updateMessages(newMessages);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat'),
-        centerTitle: true,
+        title: Text(widget.receiverName),
       ),
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              reverse: true,
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[messages.length - 1 - index];
-                return Align(
-                  alignment:
-                  message['isMe'] ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4.0),
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: message['isMe'] ? Colors.blue : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      message['text'],
-                      style: TextStyle(
-                        color: message['isMe'] ? Colors.white : Colors.black,
+            child: Obx(() {
+              if (chatLogic.messages.isEmpty) {
+                return const Center(child: Text('No messages yet.'));
+              }
+              return ListView.builder(
+                reverse: true,
+                itemCount: chatLogic.messages.length,
+                itemBuilder: (context, index) {
+                  Message message = chatLogic.messages[index];
+                  bool isMe = message.senderId == chatLogic.myFbAuth.currentUser!.uid;
+
+                  // Message Bubble
+                  return Align(
+                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: isMe ? Colors.teal.shade300 : Colors.grey.shade300,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: isMe ? Radius.circular(12) : Radius.zero,
+                          bottomRight: isMe ? Radius.zero : Radius.circular(12),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            message.messageText,
+                            style: TextStyle(color: isMe ? Colors.white : Colors.black),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            DateFormat('hh:mm a').format(message.timestamp),
+                            style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              );
+            }),
           ),
-          Divider(height: 1.0),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
+                    controller: messageController,
                     decoration: InputDecoration(
-                      hintText: 'Type a message',
+                      hintText: 'Type a message...',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -64,9 +105,16 @@ class ChatPage extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
-                    // Add functionality to send a message
+                    if (messageController.text.trim().isNotEmpty) {
+                      chatLogic.sendMessage(
+                        widget.chatRoomId,
+                        messageController.text.trim(),
+                        widget.receiverId,
+                      );
+                      messageController.clear();
+                    }
                   },
                 ),
               ],
@@ -77,4 +125,3 @@ class ChatPage extends StatelessWidget {
     );
   }
 }
-

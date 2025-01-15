@@ -10,7 +10,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyRootWidget());
+  runApp(const MyRootWidget());
 }
 
 class MyRootWidget extends StatelessWidget {
@@ -18,7 +18,7 @@ class MyRootWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //I'have merged bilalwork into master branch
+    //I'Have merged bilalwork into master branch
     return GetMaterialApp(
       title: 'Dispute Resolver AI',
       debugShowCheckedModeBanner: false,

@@ -1,128 +1,137 @@
-import 'package:disputeresolverai/model/users.dart';
-import 'package:disputeresolverai/screens/commonWidgets/otherWidgets.dart';
-import 'package:disputeresolverai/screens/login_screen/login_screen_logic.dart';
-import 'package:disputeresolverai/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../model/users.dart';
 import 'home_logic.dart';
 
-class HomePage extends StatelessWidget {
-  final logic = Get.put(HomeLogic());
+class HomeScreenPage extends StatelessWidget {
+  HomeScreenPage({Key? key}) : super(key: key);
 
-  HomePage({super.key});
+  final DetailsScreenLogic logic = Get.put(DetailsScreenLogic());
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        title:  Text("My Home Screen".tr),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                var result = await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return IsSureAlertBox(
-                          title: "Signing Out",
-                          content: "Are you sure to sign out?".tr);
-                    });
-
-                if (result == true) {
-                  var myCo = Get.find<Login_screenLogic>();
-                  await myCo.logOut();
-                  myCo.isSignedIn.value = true;
-                  if (kDebugMode) {
-                    print("Signed Out successfully");
-                  }
-                  Get.snackbar(
-                      MyStrings.success, MyStrings.signedOutSuccessfully);
-                }
-                // else{
-                //   print("Signed Out successfully");
-                //   Get.snackbar(MyStrings.success, MyStrings.signedOutSuccessfully);
-                // }
-              },
-              icon: const Icon(Icons.logout))
-        ],
+        title: const Text("Users"),
+        centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
-      body: FutureBuilder(
-        future: logic.getUsersFromFirebase(),
-        builder: (context, AsyncSnapshot<List<MyUser>> sanaShot) {
-          if (sanaShot.hasData) {
-            return Container(
-              padding: const EdgeInsets.all(12),
-              margin: const EdgeInsets.all(12),
-              height: size.height * 0.8,
-              width: size.width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade200,
-              ),
-              child: ListView.builder(
-                itemCount: logic.myUsers.length,
-                itemBuilder: (context, i) {
-                  DateTime dateTime ;
-                  if(logic.myUsers[i].createdAt.runtimeType == int){
-                    dateTime  = DateTime.fromMicrosecondsSinceEpoch(logic.myUsers[i].createdAt!);
-                  }else{
-                    dateTime  = DateTime.parse(logic.myUsers[i].createdAt.toString());
-                  }
-                  String papuDate = DateFormat('EEEE ,dd MMMM yyyy').format(dateTime);
-                  String formattedDate = DateFormat('hh:mm:ss a').format(dateTime);
+      body: _showUsers(context),
+    );
+  }
 
-                  // bool c = a==b;
-                  bool isAlreadySignedIn =  logic.myUsers[i].id ==  FirebaseAuth.instance.currentUser!.uid;
-                  //Remove duplicate values from list
-                  logic.myUsers.toSet().toList();
+  Widget _showUsers(BuildContext context) {
+    return FutureBuilder<List<Person>>(
+      future: logic.getUsersOnFirebase(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'Error: ${snapshot.error}',
+              style: const TextStyle(color: Colors.red),
+            ),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text("No users found"),
+          );
+        }
 
-                  return isAlreadySignedIn == true? Container(): ListTile(
-                    onTap: (){
-                      logic.createChatRoom(logic.myUsers[i].id);
+        return ListView.builder(
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, i) {
+            final user = snapshot.data![i];
 
+            // Parse createdAt
+            DateTime dateTime;
+            if (user.createdAt.runtimeType == int) {
+              dateTime =
+                  DateTime.fromMicrosecondsSinceEpoch(user.createdAt * 1000);
+            } else {
+              dateTime = DateTime.parse(user.createdAt.toString());
+            }
+
+            DateTime adjustedDateTime =
+            dateTime.subtract(const Duration(days: 20));
+            String formattedDateTime =
+            DateFormat.yMd().add_jm().format(adjustedDateTime);
+
+            bool isCurrentUser = user.id == FirebaseAuth.instance.currentUser!.uid;
+
+            // Build User Card
+            return isCurrentUser
+                ? Container() // Skip current user
+                : Card(
+              elevation: 8.0,
+              margin: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 5),
+              child: ListTile(
+                onTap: () {
+                  logic.createChatRoom(user.id, user.name);
+                },
+                leading: GestureDetector(
+                  onTap: () {
+                    _showImageDialog(context, user.imageUrl);
+                  },
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.grey[200],
+                    backgroundImage: NetworkImage(user.imageUrl),
+                    onBackgroundImageError: (_, __) {
+                      // Error placeholder
                     },
-                    trailing: Text(
-                      logic.myUsers[i].id,
-                      style: const TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
-                    ),
+                  ),
+                ),
+                title: Text(
+                  user.name,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal.shade900,
+                  ),
+                ),
+                subtitle: Text(formattedDateTime),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
-                    title: Text(
-                      logic.myUsers[i].name.toUpperCase(),
-                      style: const TextStyle(
-                          color: Colors.indigo,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text("$papuDate $formattedDate"),
-                    leading: Container(
-                      height: 80,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.red
-                      ),
-                      child: ClipOval(
-                        child: Image.network(
-                          logic.myUsers[i].imageUrl ?? "NO Image ",
-                        ),
-                      ),
+  void _showImageDialog(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            color: Colors.black,
+            child: InteractiveViewer(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(child: CircularProgressIndicator());
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(
+                    child: Text(
+                      'Failed to load image',
+                      style: TextStyle(color: Colors.white),
                     ),
                   );
                 },
               ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
-
-
-///
