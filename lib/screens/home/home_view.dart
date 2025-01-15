@@ -36,7 +36,7 @@ class Home_screenPage extends StatelessWidget {
               }
               DateTime adjustedDateTime = dateTime.subtract(Duration(days: 20));
               String papuDateAndTime =
-              DateFormat.yMd().add_jm().format(adjustedDateTime);
+                  DateFormat.yMd().add_jm().format(adjustedDateTime);
               bool isAlreadySignedIn = logic.myAllStudets[i].id ==
                   FirebaseAuth.instance.currentUser!.uid;
               return Card(
@@ -48,45 +48,45 @@ class Home_screenPage extends StatelessWidget {
                   child: isAlreadySignedIn == true
                       ? Container()
                       : ListTile(
-                    onTap: () {
-                      logic.createChatRoom(logic.myAllStudets[i].id);
-                    },
-                    title: Text(
-                      logic.myAllStudets[i].name,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal.shade900,
-                      ),
-                    ),
-                    leading: InkWell(
-                      onTap: () {
-                        // Show dialog with image
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              child: Container(
-                                color: Colors.black,
-                                child: InteractiveViewer(
-                                  child: Image.network(
-                                    logic.myAllStudets[i].imageUrl,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            );
+                          onTap: () {
+                            logic.createChatRoom(logic.myAllStudets[i].id);
                           },
-                        );
-                      },
-                      child: Image.network(
-                        logic.myAllStudets[i].imageUrl,
-                        height: 120,
-                        width: 120,
-                      ),
-                    ),
-                    subtitle: Text('$papuDateAndTime'),
-                  ),
+                          title: Text(
+                            logic.myAllStudets[i].name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal.shade900,
+                            ),
+                          ),
+                          leading: InkWell(
+                            onTap: () {
+                              // Show dialog with image
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    child: Container(
+                                      color: Colors.black,
+                                      child: InteractiveViewer(
+                                        child: Image.network(
+                                          logic.myAllStudets[i].imageUrl,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Image.network(
+                              logic.myAllStudets[i].imageUrl,
+                              height: 120,
+                              width: 120,
+                            ),
+                          ),
+                          subtitle: Text('$papuDateAndTime'),
+                        ),
                 ),
               );
             },

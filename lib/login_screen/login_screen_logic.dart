@@ -25,9 +25,6 @@ class Login_screenLogic extends GetxController {
     isLoading.value = true; // Start loading
     await Future.delayed(Duration(seconds: 2)); // Simulate a login process
     isLoading.value = false; // Stop loading
-
-    // Add your navigation or success logic here
-    Get.snackbar("Success", "Login Successful!");
     UserCredential userCredential =await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailCon.text, password: passCon.text);
     if(userCredential != null){

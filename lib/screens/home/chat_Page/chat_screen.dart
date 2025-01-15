@@ -17,9 +17,9 @@ class ChatScreen extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF1E3C72), // Professional dark blue
+              Color(0xFF1E3C72),
               Color(0xFF2A5298),
-              Color(0xFF3B8D99), // Teal accent
+              Color(0xFF3B8D99),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -60,7 +60,7 @@ class ChatScreen extends StatelessWidget {
             Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('messages')
+                    .collection('msg')
                     .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -104,59 +104,59 @@ class ChatScreen extends StatelessWidget {
                                 ? (doc['timestamp'] as Timestamp).toDate()
                                 : DateTime.now();
 
-                            return Align(
-                              alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                              child: Column(
-                                crossAxisAlignment:
-                                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onLongPress: isMe ? () => chatController.deleteMessage(doc.id) : null,
-                                    child: AnimatedOpacity(
-                                      opacity: 1.0,
-                                      duration: Duration(milliseconds: 500),
-                                      child: Container(
-                                        margin: EdgeInsets.symmetric(vertical: 8),
-                                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                                        decoration: BoxDecoration(
-                                          gradient: isMe
-                                              ? LinearGradient(colors: [Color(0xFF56CCF2), Color(0xFF2F80ED)])
-                                              : LinearGradient(
-                                              colors: [Colors.grey.shade300, Colors.grey.shade100]),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16),
-                                            topRight: Radius.circular(16),
-                                            bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
-                                            bottomRight: isMe ? Radius.zero : Radius.circular(16),
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black26,
-                                              blurRadius: 4,
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ],
+                        return Align(
+                          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment:
+                            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onLongPress: isMe ? () => chatController.deleteMessage(doc.id) : null,
+                                child: AnimatedOpacity(
+                                  opacity: 1.0,
+                                  duration: Duration(milliseconds: 500),
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8),
+                                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                    decoration: BoxDecoration(
+                                      gradient: isMe
+                                          ? LinearGradient(colors: [Color(0xFF56CCF2), Color(0xFF2F80ED)])
+                                          : LinearGradient(
+                                          colors: [Colors.grey.shade300, Colors.grey.shade100]),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16),
+                                        bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
+                                        bottomRight: isMe ? Radius.zero : Radius.circular(16),
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 4,
+                                          offset: Offset(2, 2),
                                         ),
-                                        child: Text(
-                                          doc['text'],
-                                          style: TextStyle(
-                                            color: isMe ? Colors.white : Colors.black87,
-                                            fontSize: 16,
-                                          ),
-                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      doc['text'],
+                                      style: TextStyle(
+                                        color: isMe ? Colors.white : Colors.black87,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    '${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')} ${timestamp.hour >= 12 ? 'PM' : 'AM'}', // Format the time
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
+                              SizedBox(height: 4),
+                              Text(
+                                '${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')} ${timestamp.hour >= 12 ? 'PM' : 'AM'}', // Format the time
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
                             );
                           },
                         ),

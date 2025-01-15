@@ -44,7 +44,7 @@ class ChatController extends GetxController {
     isSending.value = true;
     try {
       if (user != null && messageController.text.isNotEmpty) {
-        await FirebaseFirestore.instance.collection('messages').add({
+        await FirebaseFirestore.instance.collection('msg').add({
           'text': messageController.text.trim(),
           'senderId': user.uid,
           'timestamp': FieldValue.serverTimestamp(),
@@ -62,7 +62,7 @@ class ChatController extends GetxController {
 
   Future<void> deleteMessage(String messageId) async {
     try {
-      await FirebaseFirestore.instance.collection('messages').doc(messageId).delete();
+      await FirebaseFirestore.instance.collection('msg').doc(messageId).delete();
     } catch (e) {
       print("Error deleting message: $e");
       Get.snackbar('Error', 'Failed to delete message');
