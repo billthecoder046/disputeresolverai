@@ -1,25 +1,42 @@
-class User {
-  String id;
+class Person {
+  String id; // New field for ID
   String name;
-  String? imageUrl;
+  String imageUrl;
+  int createdAt;
 
-  User({required this.id, required this.name, this.imageUrl});
+  Person({
+    required this.id, // Include id in the constructor
+    required this.name,
+    required this.imageUrl,
+    required this.createdAt,
+  });
 
-  // Convert a User object into a map
+  // Method to convert a Person instance to a JSON map
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id, // Add id to the JSON map
       'name': name,
       'imageUrl': imageUrl,
+      'createdAt': createdAt,
     };
   }
 
-  // Create a User object from a map
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'] as String,
+  // Factory constructor to create a Person instance from a JSON map
+  factory Person.fromJson(Map<String, dynamic> json) {
+    int createdAtTimestamp;
+
+    if (json['createdAt'].runtimeType == int) {
+      createdAtTimestamp = json['createdAt'];
+    } else {
+      DateTime myDate = DateTime.parse(json['createdAt']);
+      createdAtTimestamp = myDate.microsecondsSinceEpoch;
+    }
+
+    return Person(
+      id: json['id'] as String, // Parse id from JSON
       name: json['name'] as String,
-      imageUrl: json['imageUrl'] as String?,
+      imageUrl: json['imageUrl'] as String,
+      createdAt: createdAtTimestamp,
     );
   }
 }
