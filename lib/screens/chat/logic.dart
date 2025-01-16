@@ -9,16 +9,10 @@ class ChatLogic extends GetxController {
   final myFbFs = FirebaseFirestore.instance;
   final myFbAuth = FirebaseAuth.instance;
 
-  Future<void> sendMessage(String chatRoomId, String messageText, String receiverId) async {
+  Future<void> sendMessage(
+      String chatRoomId, String messageText, String receiverId) async {
     try {
       String senderId = myFbAuth.currentUser!.uid;
-
-      Message newMessage = Message(
-        senderId: senderId,
-        receiverId: receiverId,
-        messageText: messageText,
-        timestamp: DateTime.now(),
-      );
 
       await myFbFs
           .collection('Chatting')
@@ -28,31 +22,28 @@ class ChatLogic extends GetxController {
         'senderId': senderId,
         'receiverId': receiverId,
         'messageText': messageText,
-        'timestamp': FieldValue.serverTimestamp(), // Ensure Firestore timestamp
+        'timestamp': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      Get.snackbar('Error', 'Failed to send message: $e'); // Show error to the user
+      Get.snackbar('Error', 'Failed to send message: $e');
     }
+  }
+
+  void loadMessages(String chatRoomId) {
+    getMessages(chatRoomId).listen((newMessages) {
+      messages.value = newMessages;
+    });
   }
 
   Stream<List<Message>> getMessages(String chatRoomId) {
-    try {
-      return myFbFs
-          .collection('Chatting')
-          .doc(chatRoomId)
-          .collection('Messages')
-          .orderBy('timestamp', descending: true)
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-          .map((doc) => Message.fromJson(doc.data() as Map<String, dynamic>))
-          .toList());
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to retrieve messages: $e'); // Show error to the user
-      return Stream.empty(); // Return an empty stream if an error occurs
-    }
-  }
-
-  void updateMessages(List<Message> newMessages) {
-    messages.value = newMessages; // Update the observable list
+    return myFbFs
+        .collection('Chatting')
+        .doc(chatRoomId)
+        .collection('Messages')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Message.fromJson(doc.data() as Map<String, dynamic>))
+            .toList());
   }
 }

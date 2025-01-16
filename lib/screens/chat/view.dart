@@ -5,40 +5,28 @@ import 'package:intl/intl.dart';
 import '../../model/message.dart';
 import 'logic.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends StatelessWidget {
   final String chatRoomId;
   final String receiverId;
   final String receiverName;
 
-  ChatScreen({required this.chatRoomId, required this.receiverId, required this.receiverName, Key? key})
-      : super(key: key);
+  ChatScreen({
+    required this.chatRoomId,
+    required this.receiverId,
+    required this.receiverName,
+    Key? key,
+  }) : super(key: key);
 
-  @override
-  _ChatScreenState createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
   final ChatLogic chatLogic = Get.put(ChatLogic());
   final TextEditingController messageController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    // Load initial messages when the widget is built
-    _loadMessages();
-  }
-
-  void _loadMessages() {
-    chatLogic.getMessages(widget.chatRoomId).listen((newMessages) {
-      chatLogic.updateMessages(newMessages);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    chatLogic.loadMessages(chatRoomId);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiverName),
+        title: Text(receiverName),
       ),
       body: Column(
         children: [
@@ -52,73 +40,83 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: chatLogic.messages.length,
                 itemBuilder: (context, index) {
                   Message message = chatLogic.messages[index];
-                  bool isMe = message.senderId == chatLogic.myFbAuth.currentUser!.uid;
+                  bool isMe =
+                      message.senderId == chatLogic.myFbAuth.currentUser?.uid;
 
-                  // Message Bubble
-                  return Align(
-                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: isMe ? Colors.teal.shade300 : Colors.grey.shade300,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                          bottomLeft: isMe ? Radius.circular(12) : Radius.zero,
-                          bottomRight: isMe ? Radius.zero : Radius.circular(12),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            message.messageText,
-                            style: TextStyle(color: isMe ? Colors.white : Colors.black),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            DateFormat('hh:mm a').format(message.timestamp),
-                            style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                  return _buildMessageBubble(message, isMe);
                 },
               );
             }),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Type a message...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    if (messageController.text.trim().isNotEmpty) {
-                      chatLogic.sendMessage(
-                        widget.chatRoomId,
-                        messageController.text.trim(),
-                        widget.receiverId,
-                      );
-                      messageController.clear();
-                    }
-                  },
-                ),
-              ],
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageBubble(Message message, bool isMe) {
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: isMe ? Colors.teal.shade300 : Colors.grey.shade300,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(12),
+            topRight: const Radius.circular(12),
+            bottomLeft: isMe ? const Radius.circular(12) : Radius.zero,
+            bottomRight: isMe ? Radius.zero : const Radius.circular(12),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              message.messageText,
+              style: TextStyle(
+                color: isMe ? Colors.white : Colors.black,
+              ),
             ),
+            const SizedBox(height: 4),
+            Text(
+              DateFormat('hh:mm a').format(message.timestamp),
+              style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: messageController,
+              decoration: InputDecoration(
+                hintText: 'Type a message...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () {
+              if (messageController.text.trim().isNotEmpty) {
+                chatLogic.sendMessage(
+                  chatRoomId,
+                  messageController.text.trim(),
+                  receiverId,
+                );
+                messageController.clear();
+              }
+            },
           ),
         ],
       ),

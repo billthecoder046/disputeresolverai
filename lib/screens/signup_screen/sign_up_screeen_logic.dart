@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../model/users.dart';
 import '../home/home_view.dart';
 
@@ -34,7 +35,7 @@ class SignUp_screeenLogic extends GetxController {
         } else {
           UserCredential myUser = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
-              email: emailC.text, password: passC.text);
+                  email: emailC.text, password: passC.text);
           if (myUser.user != null) {
             String name = userName.text;
             String id = myUser.user!.uid; // Set id as the Firebase user's UID
@@ -49,8 +50,8 @@ class SignUp_screeenLogic extends GetxController {
 
             // Save the person object to Firestore
             FirebaseFirestore.instance.collection("Users").doc(id).set(
-              person.toJson(),
-            );
+                  person.toJson(),
+                );
 
             Get.to(() => HomeScreenPage());
           }

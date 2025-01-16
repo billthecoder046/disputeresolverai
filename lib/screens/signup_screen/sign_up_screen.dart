@@ -1,18 +1,18 @@
 import 'dart:typed_data';
-import 'package:disputeresolverai/model/users.dart';
+
 import 'package:disputeresolverai/screens/home/home_view.dart';
-import 'package:disputeresolverai/utilities/global.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
+
 import '../login_screen/login_screen_view.dart';
 import 'sign_up_screeen_logic.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -24,22 +24,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isLoading = false;
 
   Future<void> _initialize() async {
-    // Check if the user is signed in
-    User? user =  FirebaseAuth.instance.currentUser;
-
-
+    User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      print("My user is not null");
       Future.delayed(const Duration(seconds: 2));
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreenPage()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => HomeScreenPage()));
       });
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initialize();
   }
@@ -65,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
+                  SizedBox(
                     height: 200,
                     width: 200,
                     child: Image.asset('assets/images/pngegg (1).png'),
@@ -165,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [Colors.teal, Colors.tealAccent],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
@@ -178,8 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: _isLoading
                               ? const CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white,
-                                  ),
+                                      Colors.white),
                                 )
                               : const Text(
                                   'Sign Up',
@@ -222,7 +217,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return await ref.getDownloadURL();
     } catch (e) {
       Get.snackbar('Error', 'Error uploading image: $e');
-      print('Error uploading image: $e');
       return null;
     }
   }
