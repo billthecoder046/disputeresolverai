@@ -32,4 +32,16 @@ class Login_screenLogic extends GetxController {
       Get.to(()=>HomeScreenPage());
     }
   }
+  Future<void> resetPassword() async {
+    if(emailCon.text.isEmpty){
+      Get.snackbar('Error', 'Please enter your email address');
+      try{
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailCon.text.trim());
+        Get.snackbar('Success', 'Password reset email sent!');
+      }catch(e){
+        print(e);
+        Get.snackbar('Error', 'Failed to send password reset email');
+      }
+    }
+  }
 }

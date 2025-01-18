@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/message.dart';
+import '../../model/users.dart';
 import 'logic.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -47,6 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
         toolbarHeight: 80,
         title: Row(
           children: [
+
             CircleAvatar(
               backgroundImage: AssetImage('assets/profile_placeholder.png'),
               radius: 24,
@@ -244,4 +246,34 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+}
+void _showImageDialog(BuildContext context, String imageUrl) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Container(
+          color: Colors.black,
+          child: InteractiveViewer(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.contain,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const Center(child: CircularProgressIndicator());
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return const Center(
+                  child: Text(
+                    'Failed to load image',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

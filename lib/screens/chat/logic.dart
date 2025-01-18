@@ -3,8 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../../model/message.dart';
+import '../../model/users.dart';
 
 class ChatLogic extends GetxController {
+  List<Person> myUsers = [];
+
   var messages = <Message>[].obs;
   final myFbFs = FirebaseFirestore.instance;
   final myFbAuth = FirebaseAuth.instance;
