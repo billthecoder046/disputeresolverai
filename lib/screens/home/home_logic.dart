@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import '../../model/users.dart';
+import '../../model/person.dart';
 import 'chat_Page/chat_screen.dart';
 
 class Details_screenLogic extends GetxController {

@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:disputeresolverai/model/users.dart';
+import 'package:disputeresolverai/model/person.dart';
 import 'package:disputeresolverai/screens/home/home_view.dart';
 import 'package:disputeresolverai/utilities/global.dart';
 import 'package:firebase_auth/firebase_auth.dart';
