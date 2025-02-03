@@ -12,7 +12,7 @@ class SignUp_screeenLogic extends GetxController {
 
   Future<bool> userNameAvailable(String username) async {
     final querySnapshot = await FirebaseFirestore.instance
-        .collection('Persons')
+        .collection('Users')
         .where('name', isEqualTo: username)
         .get();
     List<DocumentSnapshot> saim = querySnapshot.docs;
@@ -48,11 +48,11 @@ class SignUp_screeenLogic extends GetxController {
             );
 
             // Save the person object to Firestore
-            FirebaseFirestore.instance.collection("Persons").doc(id).set(
+            FirebaseFirestore.instance.collection("Users").doc(id).set(
               person.toJson(),
             );
 
-            Get.to(() => Home_screenPage());
+            Get.to(() => HomeScreenPage());
           }
         }
       } catch (e) {
@@ -60,5 +60,17 @@ class SignUp_screeenLogic extends GetxController {
         Get.snackbar('Error', e.toString());
       }
     }
+  }
+  Future<void> resetPassword() async {
+if(emailC.text.isEmpty){
+  Get.snackbar('Error', 'Please enter your email address');
+  try{
+     await FirebaseAuth.instance.sendPasswordResetEmail(email: emailC.text.trim());
+     Get.snackbar('Success', 'Password reset email sent!');
+  }catch(e){
+    print(e);
+    Get.snackbar('Error', 'Failed to send password reset email');
+  }
+}
   }
 }

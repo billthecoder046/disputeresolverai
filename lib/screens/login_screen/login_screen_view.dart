@@ -19,7 +19,7 @@ class Login_screenPage extends StatelessWidget {
       ),
       body: Obx(() {
         if (logic.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         return Padding(
@@ -62,6 +62,19 @@ class Login_screenPage extends StatelessWidget {
                 ),
                 obscureText: logic.isPasswordHidden.value,
               )),
+              Align (
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    // Call the resetPassword function to handle password reset
+                    logic.resetPassword();
+                  },
+                  child: const Text(
+                    'Forgot Password?',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ),
               const Gap(24),
               ElevatedButton(
                 onPressed: () {
