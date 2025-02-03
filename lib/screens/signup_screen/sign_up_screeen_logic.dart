@@ -12,7 +12,7 @@ class SignUp_screeenLogic extends GetxController {
 
   Future<bool> userNameAvailable(String username) async {
     final querySnapshot = await FirebaseFirestore.instance
-        .collection('Persons')
+        .collection('Users')
         .where('name', isEqualTo: username)
         .get();
     List<DocumentSnapshot> saim = querySnapshot.docs;
