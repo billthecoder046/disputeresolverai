@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../../model/message.dart';
-import '../../model/users.dart';
+import '../../model/person.dart';
 
 class ChatLogic extends GetxController {
   List<Person> myUsers = [];
@@ -36,6 +36,10 @@ class ChatLogic extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Failed to send message: $e'); // Show error to the user
     }
+  }
+  void startCall(String receiverId, String receiverName) {
+    Get.snackbar('Calling', 'Starting call with $receiverName...');
+    // Implement calling logic using WebRTC, Agora, or Firebase Cloud Functions
   }
 
   Stream<List<Message>> getMessages(String chatRoomId) {

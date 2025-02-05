@@ -24,4 +24,5 @@ class Message {
       timestamp: (json['timestamp'] as Timestamp).toDate(),
     );
   }
+
 }

@@ -1,9 +1,10 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/message.dart';
-import '../../model/users.dart';
 import 'logic.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -25,6 +26,8 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final ChatLogic chatLogic = Get.put(ChatLogic());
   final TextEditingController messageController = TextEditingController();
+  bool isSelectionMode = false;
+  Set<String> selectedMessages = {};
 
   @override
   void initState() {
@@ -38,6 +41,29 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  void _toggleSelection(String messageId) {
+    setState(() {
+      if (selectedMessages.contains(messageId)) {
+        selectedMessages.remove(messageId);
+      } else {
+        selectedMessages.add(messageId);
+      }
+      if (selectedMessages.isEmpty) {
+        isSelectionMode = false;
+      }
+    });
+  }
+
+  void _deleteSelectedMessages() {
+    for (var messageId in selectedMessages) {
+      chatLogic.deleteMessage(widget.chatRoomId, messageId);
+    }
+    setState(() {
+      selectedMessages.clear();
+      isSelectionMode = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,9 +72,10 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 80,
-        title: Row(
+        title: isSelectionMode
+            ? Text('${selectedMessages.length} selected')
+            : Row(
           children: [
-
             CircleAvatar(
               backgroundImage: AssetImage('assets/profile_placeholder.png'),
               radius: 24,
@@ -61,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   widget.receiverName,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 18, // Reduced from 20
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -73,6 +100,13 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          if (isSelectionMode)
+            IconButton(
+              icon: Icon(Icons.delete, color: Colors.white),
+              onPressed: _deleteSelectedMessages,
+            ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -100,74 +134,71 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: chatLogic.messages.length,
                   itemBuilder: (context, index) {
                     Message message = chatLogic.messages[index];
-                    bool isMe = message.senderId == chatLogic.myFbAuth.currentUser!.uid;
+                    bool isMe =
+                        message.senderId == chatLogic.myFbAuth.currentUser!.uid;
 
                     return Align(
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                      isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: GestureDetector(
-                        onLongPress: () async {
+                        onLongPress: () {
                           if (isMe) {
-                            bool confirmDelete = await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Delete Message'),
-                                  content: Text('Are you sure you want to delete this message?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                      child: Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(true),
-                                      child: Text('Delete'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                            if (confirmDelete) {
-                              chatLogic.deleteMessage(widget.chatRoomId, message.id);
-                            }
+                            setState(() {
+                              isSelectionMode = true;
+                              _toggleSelection(message.id);
+                            });
+                          }
+                        },
+                        onTap: () {
+                          if (isSelectionMode && isMe) {
+                            _toggleSelection(message.id);
                           }
                         },
                         child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 8.0), // Reduced margin
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 12.0), // Reduced padding
                           constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.75,
+                            maxWidth:
+                            MediaQuery.of(context).size.width * 0.6, // Reduced from 0.75
                           ),
                           decoration: BoxDecoration(
-                            color: isMe ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.1),
+                            color: selectedMessages.contains(message.id)
+                                ? Colors.blue.withOpacity(0.5) // Highlight selected message
+                                : (isMe ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.1)),
                             borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16),
-                              bottomLeft: isMe ? Radius.circular(16) : Radius.zero,
-                              bottomRight: isMe ? Radius.zero : Radius.circular(16),
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12),
+                              bottomLeft: isMe ? Radius.circular(12) : Radius.zero,
+                              bottomRight: isMe ? Radius.zero : Radius.circular(12),
                             ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black26,
-                                blurRadius: 4,
-                                offset: Offset(2, 2),
+                                blurRadius: 2,
+                                offset: Offset(1, 1),
                               ),
                             ],
                           ),
+
                           child: Column(
-                            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                            crossAxisAlignment: isMe
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
                             children: [
                               Text(
                                 message.messageText,
                                 style: TextStyle(
                                   color: isMe ? Colors.black : Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 14, // Reduced from 16
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 2), // Reduced from 4
                               Text(
                                 DateFormat('hh:mm a').format(message.timestamp),
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 10, // Reduced from 12
                                   color: isMe ? Colors.black54 : Colors.white70,
                                 ),
                               ),
@@ -181,14 +212,15 @@ class _ChatScreenState extends State<ChatScreen> {
               }),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0), // Reduced padding
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)), // Reduced from 20
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
-                    blurRadius: 10,
+                    blurRadius: 8, // Reduced from 10
                     offset: Offset(0, -2),
                   ),
                 ],
@@ -213,15 +245,16 @@ class _ChatScreenState extends State<ChatScreen> {
                         fillColor: Colors.grey.shade200,
                         hintText: 'Your Message',
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10), // Reduced padding
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(24), // Reduced from 30
                           borderSide: BorderSide.none,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6), // Reduced from 8
                   GestureDetector(
                     onTap: () {
                       if (messageController.text.trim().isNotEmpty) {
@@ -235,7 +268,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     },
                     child: CircleAvatar(
                       backgroundColor: Color(0xFF6A11CB),
-                      child: Icon(Icons.send, color: Colors.white),
+                      radius: 22, // Reduced from default
+                      child: Icon(Icons.send, color: Colors.white, size: 18), // Reduced icon size
                     ),
                   ),
                 ],
@@ -246,34 +280,4 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-}
-void _showImageDialog(BuildContext context, String imageUrl) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Container(
-          color: Colors.black,
-          child: InteractiveViewer(
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.contain,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const Center(child: CircularProgressIndicator());
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return const Center(
-                  child: Text(
-                    'Failed to load image',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      );
-    },
-  );
 }
