@@ -1,142 +1,47 @@
-import 'dart:typed_data';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:disputeresolverai/screens/home/home_view.dart';
-import 'package:disputeresolverai/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../model/users.dart';
-import 'login_screen_view.dart';
-
 class Login_screenLogic extends GetxController {
-  //MyVariables
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  TextEditingController passCon = TextEditingController();
+  TextEditingController emailCon = TextEditingController();
+  var isLoading = false.obs; // Observable for loading state
+  var isPasswordHidden = true.obs;
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
+  }
 
-  TextEditingController emailC = TextEditingController();
-  TextEditingController passC = TextEditingController();
-  TextEditingController userName = TextEditingController();
+  String getUserInitials() {
+    // Example: Extracting the first character of the name
+    String userName = "User Name";
+    return userName.isNotEmpty ? userName[0].toUpperCase() : "?";
+  }
+  Future<void> signUser() async {
+    if (passCon.text.isEmpty || emailCon.text.isEmpty) {
+      Get.snackbar('Error', 'Some Error occurred');
+    }
+    isLoading.value = true; // Start loading
+    await Future.delayed(const Duration(seconds: 2)); // Simulate a login process
+    isLoading.value = false; // Stop loading
 
-
-
-  //ifSignedInVariable
-  RxBool isSignedIn = true.obs;
-
-
-  //MyFunctions
-  Future<void> createUserOnFirebase(String myProfileImageUrl) async{
-    if(emailC.text.isEmpty || passC.text.isEmpty){
-      Get.snackbar(
-        'Email or password is empty',
-        "Both are required",
-        colorText: Colors.white,
-        backgroundColor: Colors.lightBlue,
-        icon: const Icon(Icons.add_alert),
-      );
-    }else {
-      try {
-        // Create user with Firebase Authentication
-        UserCredential? myUser = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailC.text,
-          password: passC.text,
-        );
-
-        // Extract user ID
-        String myUserId = myUser.user!.uid;
-
-        // Create MyUser object (assuming `MyUser` class exists)
-        Person myUserData = Person(name: userName.text,imageUrl:myProfileImageUrl,createdAt: DateTime.now().microsecondsSinceEpoch );
-
-        // Save user data to Firestore (you need to add the actual data)
-        await FirebaseFirestore.instance.collection("Users").doc(myUserId).set(
-            myUserData.toJson()
-        );
-
-        // Navigate to HomePage with transition (assuming HomePage exists)
-        Get.to(
-              () => Home_screenPage(),
-          transition: Transition.leftToRight,
-        );
-      } on FirebaseAuthException catch (e) {
-        // Handle specific FirebaseAuth exceptions (recommended)
-        String message = "";
-        switch (e.code) {
-          case "weak-password":
-            message = "Password is too weak.";
-            break;
-          case "email-already-in-use":
-            message = "Email already exists.";
-            break;
-          default:
-            message = MyStrings.someErrorOccurred.tr;
-        }
-        Get.snackbar("Error Creating User", message, colorText: Colors.white, backgroundColor: Colors.lightBlue, icon: const Icon(Icons.add_alert));
-      } catch (e) {
-        // Catch other exceptions (generic error handling)
+    UserCredential userCredential =await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailCon.text, password: passCon.text);
+    if(userCredential != null){
+      Get.to(()=>HomeScreenPage());
+    }
+  }
+  Future<void> resetPassword() async {
+    if(emailCon.text.isEmpty){
+      Get.snackbar('Error', 'Please enter your email address');
+      try{
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailCon.text.trim());
+        Get.snackbar('Success', 'Password reset email sent!');
+      }catch(e){
         print(e);
-        Get.snackbar(
-          'Some issue occurred',
-          e.toString(), // Avoid showing complete error message for security reasons
-          colorText: Colors.white,
-          backgroundColor: Colors.lightBlue,
-          icon: const Icon(Icons.add_alert),
-        );
-      } finally {
-        print("Thankyou for your time"); // This can be removed if not needed
+        Get.snackbar('Error', 'Failed to send password reset email');
       }
     }
-
   }
-  Future<void> signInUserOnApp() async{
-    if(emailC.text.isEmpty || passC.text.isEmpty){
-      Get.snackbar(
-        'Email or password is empty',
-        "Both are required",
-        colorText: Colors.white,
-        backgroundColor: Colors.lightBlue,
-        icon: const Icon(Icons.add_alert),
-      );
-    }else{
-      try {
-        Get.to(()=> Home_screenPage(), transition: Transition.leftToRight);
-      } catch (e) {
-        print(e);
-        Get.snackbar(
-          'Some issue occurred',
-          e.toString(),
-          colorText: Colors.white,
-          backgroundColor: Colors.lightBlue,
-          icon: const Icon(Icons.add_alert),
-        );
-      } finally {
-        print("Thankyou for your time");
-      }
-    }
-
-  }
-  //
-
-  Future<void> loginUser() async{
-    try {
-      UserCredential myUser = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailC.text, password: passC.text);
-      if(myUser !=null){
-        Get.to(()=> Home_screenPage(), transition: Transition.leftToRight);
-      }
-
-    } catch (e) {
-      print(e);
-      Get.snackbar(MyStrings.someErrorOccurred.tr,e.toString());
-    }
-  }
-
-  //MyFunctions
-  Future<void> logOut() async{
-    await _firebaseAuth.signOut();
-    Get.offAll(Login_screenPage());
-
-  }
-
-
 }
