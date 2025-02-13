@@ -12,17 +12,10 @@ class ChatLogic extends GetxController {
   final myFbFs = FirebaseFirestore.instance;
   final myFbAuth = FirebaseAuth.instance;
 
-  Future<void> sendMessage(String chatRoomId, String messageText, String receiverId) async {
+  Future<void> sendMessage(
+      String chatRoomId, String messageText, String receiverId) async {
     try {
       String senderId = myFbAuth.currentUser!.uid;
-
-      // Message newMessage = Message(
-      //   senderId: senderId,
-      //   receiverId: receiverId,
-      //   messageText: messageText,
-      //   timestamp: DateTime.now(),
-      // );
-
       await myFbFs
           .collection('Chatting')
           .doc(chatRoomId)
@@ -34,12 +27,9 @@ class ChatLogic extends GetxController {
         'timestamp': FieldValue.serverTimestamp(), // Ensure Firestore timestamp
       });
     } catch (e) {
-      Get.snackbar('Error', 'Failed to send message: $e'); // Show error to the user
+      Get.snackbar(
+          'Error', 'Failed to send message: $e'); // Show error to the user
     }
-  }
-  void startCall(String receiverId, String receiverName) {
-    Get.snackbar('Calling', 'Starting call with $receiverName...');
-    // Implement calling logic using WebRTC, Agora, or Firebase Cloud Functions
   }
 
   Stream<List<Message>> getMessages(String chatRoomId) {
@@ -51,10 +41,12 @@ class ChatLogic extends GetxController {
           .orderBy('timestamp', descending: true)
           .snapshots()
           .map((snapshot) => snapshot.docs
-          .map((doc) => Message.fromJson(doc.data() as Map<String, dynamic>, doc.id))
-          .toList());
+              .map((doc) =>
+                  Message.fromJson(doc.data() as Map<String, dynamic>, doc.id))
+              .toList());
     } catch (e) {
-      Get.snackbar('Error', 'Failed to retrieve messages: $e'); // Show error to the user
+      Get.snackbar(
+          'Error', 'Failed to retrieve messages: $e'); // Show error to the user
       return Stream.empty(); // Return an empty stream if an error occurs
     }
   }
@@ -71,7 +63,6 @@ class ChatLogic extends GetxController {
       Get.snackbar('Error', 'Failed to delete message: $e');
     }
   }
-
 
   void updateMessages(List<Message> newMessages) {
     messages.value = newMessages; // Update the observable list

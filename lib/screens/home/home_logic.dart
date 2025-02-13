@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../model/person.dart';
@@ -15,7 +16,7 @@ class DetailsScreenLogic extends GetxController {
     try {
       QuerySnapshot myAllDocs = await myFbFs.collection('Users').get();
       for (var element in myAllDocs.docs) {
-        Person myUser = Person.fromJson(element.data() as Map<String, dynamic>);
+        Person myUser = Person.fromJson(element.data() as Map<String,dynamic>);
         if (!myUsers.any((user) => user.id == myUser.id)) {
           myUsers.add(myUser);
         }
@@ -44,7 +45,9 @@ class DetailsScreenLogic extends GetxController {
           'participants': [currentUserId, otherUserId],
           'timestamp': FieldValue.serverTimestamp(),
         });
-        print("Chat room created: $chatRoomId");
+        if (kDebugMode) {
+          print("Chat room created: $chatRoomId");
+        }
       }
 
       // Navigate to chat screen

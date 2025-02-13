@@ -136,7 +136,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     Message message = chatLogic.messages[index];
                     bool isMe =
                         message.senderId == chatLogic.myFbAuth.currentUser!.uid;
-
                     return Align(
                       alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,
