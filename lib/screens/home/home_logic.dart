@@ -43,7 +43,7 @@ class DetailsScreenLogic extends GetxController {
         await myFbFs.collection('Chatting').doc(chatRoomId).set({
           'chatRoomId': chatRoomId,
           'participants': [currentUserId, otherUserId],
-          'timestamp': FieldValue.serverTimestamp(),
+          'timestamp ': FieldValue.serverTimestamp(),
         });
         if (kDebugMode) {
           print("Chat room created: $chatRoomId");

@@ -151,7 +151,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                               return;
                             }
-
                             setState(() => _isLoading = true);
                             String username = logic.userName.text;
                             String? imageUrl =
@@ -160,7 +159,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             if (imageUrl != null) {
                               await logic.createUserOnFirebase(imageUrl);
                             }
-
                             setState(() => _isLoading = false);
                           },
                     child: Container(

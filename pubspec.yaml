@@ -48,9 +48,12 @@ dependencies:
   firebase_storage: ^12.2.0
   intl: ^0.19.0
   flutter_sound: ^9.17.8
-  permission_handler: ^11.3.1
+  permission_handler: ^11.4.0
   agora_rtc_engine: ^6.5.0
   emoji_picker_flutter:
+  record: ^5.2.1
+  audioplayers: ^6.3.0
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

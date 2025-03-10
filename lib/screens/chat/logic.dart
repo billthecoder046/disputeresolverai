@@ -32,7 +32,7 @@ class ChatLogic extends GetxController {
     }
   }
 
-  Stream<List<Message>> getMessages(String chatRoomId) {
+  Stream <List<Message>> getMessages(String chatRoomId) {
     try {
       return myFbFs
           .collection('Chatting')
@@ -41,9 +41,8 @@ class ChatLogic extends GetxController {
           .orderBy('timestamp', descending: true)
           .snapshots()
           .map((snapshot) => snapshot.docs
-              .map((doc) =>
-                  Message.fromJson(doc.data() as Map<String, dynamic>, doc.id))
-              .toList());
+          .map((doc) => Message.fromJson(doc.data() as Map<String, dynamic>, doc.id))
+          .toList());
     } catch (e) {
       Get.snackbar(
           'Error', 'Failed to retrieve messages: $e'); // Show error to the user

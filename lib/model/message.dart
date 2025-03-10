@@ -6,6 +6,8 @@ class Message {
   final String receiverId;
   final String messageText;
   final DateTime timestamp;
+  final String? audioUrl; // Added audio URL support
+  final bool isVoiceMessage; // Added to distinguish voice messages
 
   Message({
     required this.id,
@@ -13,6 +15,8 @@ class Message {
     required this.receiverId,
     required this.messageText,
     required this.timestamp,
+    this.audioUrl, // Optional for voice messages
+    this.isVoiceMessage = false, // Default to false
   });
 
   factory Message.fromJson(Map<String, dynamic> json, String documentId) {
@@ -22,7 +26,19 @@ class Message {
       receiverId: json['receiverId'] ?? '',
       messageText: json['messageText'] ?? '',
       timestamp: (json['timestamp'] as Timestamp).toDate(),
+      audioUrl: json['audioUrl'], // Fetching audio URL if available
+      isVoiceMessage: json['isVoiceMessage'] ?? false, // Fetching isVoiceMessage
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'messageText': messageText,
+      'timestamp': timestamp,
+      'audioUrl': audioUrl, // Include audio URL
+      'isVoiceMessage': isVoiceMessage, // Include isVoiceMessage
+    };
+  }
 }

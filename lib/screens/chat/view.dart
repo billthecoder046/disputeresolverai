@@ -155,16 +155,16 @@ class _ChatScreenState extends State<ChatScreen> {
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(
-                              vertical: 4.0, horizontal: 8.0), // Reduced margin
+                              vertical: 4.0, horizontal: 8.0),
                           padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 12.0), // Reduced padding
+                              vertical: 8.0, horizontal: 12.0),
                           constraints: BoxConstraints(
                             maxWidth:
-                            MediaQuery.of(context).size.width * 0.6, // Reduced from 0.75
+                            MediaQuery.of(context).size.width * 0.6,
                           ),
                           decoration: BoxDecoration(
                             color: selectedMessages.contains(message.id)
-                                ? Colors.blue.withOpacity(0.5) // Highlight selected message
+                                ? Colors.blue.withOpacity(0.5)
                                 : (isMe ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.1)),
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(12),
@@ -190,14 +190,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                 message.messageText,
                                 style: TextStyle(
                                   color: isMe ? Colors.black : Colors.white,
-                                  fontSize: 14, // Reduced from 16
+                                  fontSize: 14,
                                 ),
                               ),
-                              const SizedBox(height: 2), // Reduced from 4
+                              const SizedBox(height: 2),
                               Text(
                                 DateFormat('hh:mm a').format(message.timestamp),
                                 style: TextStyle(
-                                  fontSize: 10, // Reduced from 12
+                                  fontSize: 10,
                                   color: isMe ? Colors.black54 : Colors.white70,
                                 ),
                               ),
@@ -267,8 +267,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     },
                     child: CircleAvatar(
                       backgroundColor: Color(0xFF6A11CB),
-                      radius: 22, // Reduced from default
-                      child: Icon(Icons.send, color: Colors.white, size: 18), // Reduced icon size
+                      radius: 22,
+                      child: Icon(Icons.send, color: Colors.white, size: 18),
                     ),
                   ),
                 ],
