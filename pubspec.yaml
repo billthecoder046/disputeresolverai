@@ -54,7 +54,10 @@ dependencies:
   record: ^5.2.1
   audioplayers: ^6.3.0
   path_provider: ^2.1.5
-
+  google_sign_in:
+  shared_preferences:
+  record_mp3:
+  material_floating_search_bar:
 dev_dependencies:
   flutter_test:
     sdk: flutter
