@@ -58,6 +58,7 @@ dependencies:
   shared_preferences:
   record_mp3:
   material_floating_search_bar:
+  lottie: ^3.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
