@@ -10,10 +10,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../globalvariables.dart';
-import '../model/messages.dart';
+import '../../globalvariables.dart';
+import '../../model/messages.dart';
 
-class ChattingPageLogic extends GetxController {
+class AdminChattingPageLogic extends GetxController {
   var messages = <Messages>[].obs;
   final TextEditingController messageController = TextEditingController();
   bool isLoading = false;
@@ -24,34 +24,24 @@ class ChattingPageLogic extends GetxController {
   final FirebaseAuth myFbAuth = FirebaseAuth.instance;
 
   // Method to send messages (text & image)
-  Future<void> sendMessage(
-      String chatRoomId,
-      String receiverId,
-      String messageText, {
-        File? imageFile,
-        Uint8List? imageBytes,
-      }) async {
+  Future<void> sendMessage(String chatRoomId, String receiverId, String messageText, {File? imageFile, Uint8List? imageBytes}) async  {
     try {
       String senderId = myFbAuth.currentUser!.uid;
-      String imageUrl = "";
-      String lastMessagePreview = messageText;
+      String imageUrl = ""; // Default empty URL for text messages
 
       // Upload image if provided
       if (imageFile != null || imageBytes != null) {
-        Reference ref = storage.ref(
-            'chat_images/${DateTime.now().millisecondsSinceEpoch}.png');
-        UploadTask uploadTask = imageFile != null
-            ? ref.putFile(imageFile)
-            : ref.putData(imageBytes!);
+        print("Uploading image...");
+        Reference ref = storage.ref('chat_images/${DateTime.now().millisecondsSinceEpoch}.png');
+        UploadTask uploadTask = imageFile != null ? ref.putFile(imageFile) : ref.putData(imageBytes!);
 
         TaskSnapshot uploadSnapshot = await uploadTask;
         imageUrl = await uploadSnapshot.ref.getDownloadURL();
-        lastMessagePreview = "📷 Image";
+        print("Image uploaded: $imageUrl");
       }
 
-      // Save message to Messages subcollection
-      await myFbFs
-          .collection('ChatsRoomId')
+      // Save message in Firestore
+      await myFbFs.collection('ChatsRoomId')
           .doc(chatRoomId)
           .collection('Messages')
           .add({
@@ -61,38 +51,12 @@ class ChattingPageLogic extends GetxController {
         'timestamp': FieldValue.serverTimestamp(),
         'messageType': imageFile != null || imageBytes != null ? 'image' : 'text',
         'imageUrl': imageUrl,
-        'isSeen': false,
-        'isDelivered': false,
+        'isSeen': false, // Set to false when sending the message
+        'isDelivered': false, // Set to false when sending the message
       });
 
-      // 🔹 Update lastMessage in ChatsRoomId doc
-      await myFbFs.collection('ChatsRoomId').doc(chatRoomId).update({
-        'lastMessage': lastMessagePreview,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+      print("Message sent successfully");
 
-      // 🔹 Update contacts subcollection for both users
-      await myFbFs
-          .collection('Students')
-          .doc(senderId)
-          .collection('contacts')
-          .doc(receiverId)
-          .set({
-        'lastMessage': lastMessagePreview,
-        'lastMessageTime': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-
-      await myFbFs
-          .collection('Students')
-          .doc(receiverId)
-          .collection('contacts')
-          .doc(senderId)
-          .set({
-        'lastMessage': lastMessagePreview,
-        'lastMessageTime': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-
-      print("✅ Message sent, room + contacts updated");
     } catch (e) {
       print("Error sending message: $e");
       Get.snackbar('Error', 'Failed to send message');

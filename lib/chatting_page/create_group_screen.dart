@@ -1,11 +1,9 @@
-// import 'package:disputeresolverai/chatting_page/chatting_page_logic.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:disputeresolverai/chatting_page/widgets/chatting_page_logic.dart';
-// import 'package:flutter/material.dart';
+//
+// import 'package:cloud_firestore/cloud_firestore.dart';import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
-// import 'group_chat_screen.dart';
 //
+// import 'chatting_page_logic.dart';
 // class CreateGroupScreen extends StatefulWidget {
 //   @override
 //   _CreateGroupScreenState createState() => _CreateGroupScreenState();
@@ -13,14 +11,14 @@
 //
 // class _CreateGroupScreenState extends State<CreateGroupScreen> {
 //   Map<String, String> allUsers = {};
-//   AdminChattingPageLogic logic =Get.put(AdminChattingPageLogic());
+//   ChattingPageLogic logic =Get.put(ChattingPageLogic());
 //
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
 //         title: Text("Create Group"),
-//         backgroundColor: Colors.red,
+//         backgroundColor: Colors.deepPurple,
 //       ),
 //       body: Padding(
 //         padding: const EdgeInsets.all(16.0),
@@ -103,7 +101,7 @@
 //                   logic.saveGroup();
 //                 },
 //                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: Colors.red,
+//                   backgroundColor: Colors.deepPurple,
 //                   shape: RoundedRectangleBorder(
 //                     borderRadius: BorderRadius.circular(12),
 //                   ),

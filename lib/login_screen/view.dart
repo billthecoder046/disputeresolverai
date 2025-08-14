@@ -1,10 +1,12 @@
+
+import 'package:disputeresolverai/home_page/view.dart';
 import 'package:disputeresolverai/login_screen/sign-up_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import '../home_page/view.dart';
+
 import 'logic.dart';
 
 class SignIn_page extends StatefulWidget {
@@ -52,7 +54,6 @@ class _SignIn_pageState extends State<SignIn_page> {
                   width: 200,
                   child: Lottie.network(
                     'https://lottie.host/230db473-bae4-4f7b-b597-5466e1072f60/74TD71RDUh.json',
-
                   ),
                 ),
                 const Text(
@@ -60,7 +61,7 @@ class _SignIn_pageState extends State<SignIn_page> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 32,
-                    color: Colors.red,
+                    color: Colors.deepPurple,
                   ),
                 ),
                 const Gap(20),
@@ -75,7 +76,7 @@ class _SignIn_pageState extends State<SignIn_page> {
                     decoration: InputDecoration(
                       hintText: "Enter Email",
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.email, color: Colors.red),
+                      prefixIcon: Icon(Icons.email, color: Colors.deepPurple),
                     ),
                   ),
                 ),
@@ -92,11 +93,11 @@ class _SignIn_pageState extends State<SignIn_page> {
                     decoration: InputDecoration(
                       hintText: "Enter Password",
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.lock, color: Colors.red),
+                      prefixIcon: Icon(Icons.lock, color: Colors.deepPurple),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isObscure ? Icons.visibility : Icons.visibility_off,
-                          color: Colors.red,
+                          color: Colors.deepPurple,
                         ),
                         onPressed: () {
                           setState(() {
@@ -112,9 +113,12 @@ class _SignIn_pageState extends State<SignIn_page> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () => logic.signIn(),
+                    onPressed: () {logic.signIn();
+                      // Get.to(DashboardPage());
+
+                      },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.deepPurple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -134,7 +138,7 @@ class _SignIn_pageState extends State<SignIn_page> {
                   onPressed: () => Get.to(SignUp()),
                   child: const Text(
                     "Don't have an account? Sign Up",
-                    style: TextStyle(fontSize: 16, color: Colors.red),
+                    style: TextStyle(fontSize: 16, color: Colors.deepPurple),
                   ),
                 ),
               ],

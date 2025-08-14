@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Students {
   String name;
   int createdAt;
   String id;
-
-  Students({required this.name, required this.id, required this.createdAt});
+  String email;
+  String? lastMessage;         // Add this
+  Timestamp? lastMessageTime;
+  Students({required this.name, required this.id, required this.createdAt,required this.email, this.lastMessage,          // Initialize in constructor
+    this.lastMessageTime });
 
   // Convert object to JSON
   Map<String, dynamic> toJson() {
@@ -11,6 +16,9 @@ class Students {
       'name': name,
       'id': id,
       'createdAt': createdAt,
+      'email' : email,
+      'lastMessage': lastMessage,        // Add this
+      'lastMessageTime': lastMessageTime
     };
   }
 
@@ -27,7 +35,10 @@ class Students {
     return Students(
       name: json['name'] as String,
       id: json['id'] as String,
+      email: json['email'] as String,
       createdAt: timestamp,
+        lastMessage: json['lastMessage'] as String?,     // Add this, handle null
+        lastMessageTime: json['lastMessageTime'] as Timestamp?
     );
   }
 }

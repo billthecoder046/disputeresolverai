@@ -5,9 +5,11 @@ class Messages {
   String senderId;
   String messageText;
   String receiverId;
-  String messageType; // Added
+  String messageType; // 'text' or 'image'
   DateTime? timestamp;
-  String? audioUrl; // Added for audio messages
+  String? imageUrl;
+  bool isSeen; // New field to track if the message has been seen
+  bool isDelivered; // New field to track if the message has been delivered
 
   Messages({
     required this.id,
@@ -16,7 +18,9 @@ class Messages {
     required this.receiverId,
     required this.messageType,
     this.timestamp,
-    this.audioUrl, // Optional for text messages
+    this.imageUrl,
+    this.isSeen = false, // Default to false (not seen)
+    this.isDelivered = false, // Default to false (not delivered)
   });
 
   factory Messages.fromJson(Map<String, dynamic> json, String id) {
@@ -25,9 +29,11 @@ class Messages {
       senderId: json['senderId'] ?? '',
       messageText: json['messageText'] ?? '',
       receiverId: json['receiverId'] ?? '',
-      messageType: json['messageType'] ?? 'text', // Default to 'text'
+      messageType: json['messageType'] ?? 'text',
       timestamp: (json['timestamp'] as Timestamp?)?.toDate(),
-      audioUrl: json['audioUrl'], // Get audio URL if available
+      imageUrl: json['imageUrl'],
+      isSeen: json['isSeen'] ?? false, // Retrieve from JSON, default to false
+      isDelivered: json['isDelivered'] ?? false, // Retrieve from JSON, default to false
     );
   }
 
@@ -37,8 +43,12 @@ class Messages {
       'messageText': messageText,
       'receiverId': receiverId,
       'messageType': messageType,
-      'timestamp': timestamp,
-      'audioUrl': audioUrl, // Save audio URL if available
+      'timestamp': timestamp != null
+          ? Timestamp.fromDate(timestamp!)
+          : FieldValue.serverTimestamp(),
+      'imageUrl': imageUrl,
+      'isSeen': isSeen, // Include in JSON
+      'isDelivered': isDelivered, // Include in JSON
     };
   }
 }

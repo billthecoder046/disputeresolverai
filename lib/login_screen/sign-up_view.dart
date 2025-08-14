@@ -1,7 +1,9 @@
+
 import 'package:disputeresolverai/login_screen/view.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+
 import 'logic.dart';
 
 class SignUp extends StatefulWidget {
@@ -32,7 +34,7 @@ class _SignUpState extends State<SignUp> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 32,
-                    color: Colors.red,
+                    color: Colors.deepPurple,
                   ),
                 ),
                 const Gap(20),
@@ -43,11 +45,11 @@ class _SignUpState extends State<SignUp> {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextField(
-                    controller: logic.NameC,
+                    controller: logic.nameC,
                     decoration: InputDecoration(
                       hintText: "Enter name",
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.person, color: Colors.red),
+                      prefixIcon: Icon(Icons.person, color: Colors.deepPurple),
                     ),
                   ),
                 ),
@@ -63,7 +65,7 @@ class _SignUpState extends State<SignUp> {
                     decoration: InputDecoration(
                       hintText: "Enter Email",
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.email, color: Colors.red),
+                      prefixIcon: Icon(Icons.email, color: Colors.deepPurple),
                     ),
                   ),
                 ),
@@ -80,7 +82,7 @@ class _SignUpState extends State<SignUp> {
                     decoration: InputDecoration(
                       hintText: "Enter password",
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.lock, color: Colors.red),
+                      prefixIcon: Icon(Icons.lock, color: Colors.deepPurple),
                     ),
                   ),
                 ),
@@ -91,7 +93,7 @@ class _SignUpState extends State<SignUp> {
                   child: ElevatedButton(
                     onPressed: () => logic.createUser(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.deepPurple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -107,7 +109,7 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () => Get.to(SignIn_page()),
                   child: const Text(
                     "Already have an account? Sign In",
-                    style: TextStyle(fontSize: 16, color: Colors.red),
+                    style: TextStyle(fontSize: 16, color: Colors.deepPurple),
                   ),
                 ),
               ],
